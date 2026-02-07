@@ -1,0 +1,52 @@
+{
+    "title": "The Story of LawithanX",
+    "content": [
+        "JEVON ZEEV - Full Stack Engineer, Polymath, and Cross-Disciplinary Creator",
+        "--------------------------------------------------",
+        "[ABOUT]",
+        "I am a cross-disciplinary creator, blending linguistics, coding, cybersecurity, finance, art, and philosophy.",
+        "--------------------------------------------------",
+        "[EDUCATION]",
+        "High School: Matriculated from Fourways High School, South Africa.",
+        "College: CTI Educational Group, Information Systems (Engineering), Higher Certificate level.",
+        "Independent Learning: Continuous upskilling via Udemy, open-source projects, and advanced online courses.",
+        "--------------------------------------------------",
+        "[WORK HISTORY]",
+        "EpicDev – Backend Developer (1 year): Worked as a backend developer while studying Information Systems at CTI Educational Group, gaining foundational professional experience alongside formal education.",
+        "DontWaste – Full Stack Developer (1.5 years): First full-time professional role. Built and maintained full-stack applications, contributing to real-world production systems and collaborative development workflows.",
+        "TEFL – English Teacher (International): Taught English abroad and traveled to Israel, developing strong communication, cultural adaptability, and instructional skills.",
+        "Tensology – Full Stack Engineer (6 months): Worked on full-stack development projects, contributing technical and creative input across design and implementation phases.",
+        "Tech-JCorp – Founder & Sole Proprietor (Present): Independent contractor providing multi-disciplinary services including full-stack development, cybersecurity, digital design, and Web2/Web3 solutions.",
+        "Also developing an open-source education portal focused on teaching linguistics, coding, and project-based learning.",
+        "--------------------------------------------------",
+        "[INTERESTS]",
+        "Cybersecurity & Networking, Science, Blockchain, Artificial Intelligence, Linguistics, Philosophy, Art.",
+        "--------------------------------------------------",
+        "[HOBBIES]",
+        "Skateboarding, Capoeira, Football (Soccer), Squash, Athletics, Boxing, Dancing.",
+        "--------------------------------------------------",
+        "[AWARDS]",
+        "Silver Award – Johan Carinus Art Centre (Sculpture, 16 September 2009).",
+        "Merit & Bronze Award – Johan Carinus Art Centre (Three-dimensional work, May 2010).",
+        "--------------------------------------------------",
+        "[CERTIFICATION]",
+        "TEFL – Teaching English as a Foreign Language.",
+        "--------------------------------------------------",
+        "[PROJECTS]",
+        {
+            "type": "component",
+            "name": "story-image",
+            "props": {
+                "src": "assets/tech_jcorp_logo.png",
+                "alt": "Tech-JCorp Logo",
+                "caption": "Tech-JCorp: Secure Hybrid Digital Solutions"
+            }
+        },
+        "Tech-JCorp: Secure hybrid digital solutions combining three core skills: security, development, and design, delivered through a service portal with an open-source education focus.",
+        "URL: https://www.tech-jcorp.org",
+        "--------------------------------------------------",
+        "[CONTACT]",
+        "Phone: +27 53 770 0480",
+        "Email: lawithanx@tech-jcorp.org"
+    ]
+}
