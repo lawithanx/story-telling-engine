@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player1Sport - Login Guide & User Credentials</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-300: #cbd5e1;
+            --white: #ffffff;
+            --font-primary: 'Montserrat', sans-serif;
+            --font-secondary: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-secondary);
+            background: var(--slate-900);
+            color: var(--white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: brightness(0) invert(1);
+        }
+
+        h1 {
+            font-family: var(--font-primary);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--slate-300);
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .intro h2 {
+            font-family: var(--font-primary);
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .intro p {
+            color: var(--slate-300);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-blue);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .login-link:hover {
+            background: var(--primary-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .users-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: var(--font-primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .user-category {
+            margin-bottom: 2.5rem;
+        }
+
+        .category-header {
+            background: rgba(37, 99, 235, 0.1);
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .category-header h3 {
+            font-family: var(--font-primary);
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .category-header p {
+            color: var(--slate-300);
+            font-size: 0.95rem;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .user-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+        }
+
+        .user-name {
+            font-family: var(--font-primary);
+            font-size: 1.25rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .user-role {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--primary-blue);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .credential {
+            margin-bottom: 0.75rem;
+        }
+
+        .credential-label {
+            font-size: 0.875rem;
+            color: var(--slate-400);
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .credential-value {
+            font-size: 1rem;
+            color: var(--white);
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            word-break: break-all;
+        }
+
+        .password-badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .instructions {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .instructions h2 {
+            font-family: var(--font-primary);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .instructions ol {
+            margin-left: 1.5rem;
+            color: var(--slate-300);
+        }
+
+        .instructions li {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .instructions strong {
+            color: var(--white);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--slate-400);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Player1Sport</h1>
+            <p class="subtitle">Professional GPS-Powered Performance Tracking</p>
+        </div>
+
+        <div class="intro">
+            <h2>Login Guide</h2>
+            <p>
+                This guide provides login credentials for all test accounts. 
+                All accounts use the same password: <code style="background: rgba(0, 0, 0, 0.3); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: 'Courier New', monospace; color: var(--white);">Pl4y3r12345!</code>
+            </p>
+            <p>
+                To login, visit <a href="/login" style="color: var(--primary-blue); text-decoration: underline;">player1sport.com/login</a>, 
+                enter any email address and password listed below, then click "Log In". 
+                Choose an account that matches the role you want to test: <strong>Organization Reps</strong> manage organizations and billing, 
+                <strong>Coaches</strong> manage teams and sessions, and <strong>Players</strong> view personal performance data.
+            </p>
+            <p style="margin-top: 1rem;">
+                <a href="/login" class="login-link">Go to Login Page →</a>
+            </p>
+        </div>
+
+        <div class="users-section">
+            <h2 class="section-title">Available User Accounts</h2>
+
+            <!-- Organization Representatives -->
+            <div class="user-category">
+                <div class="category-header">
+                    <h3>Organization Representatives</h3>
+                    <p>Manage organizations, billing, teams, and invite users</p>
+                </div>
+                <div class="users-grid">
+                    <div class="user-card">
+                        <div class="user-name">Org Rep One</div>
+                        <span class="user-role">ORG REP</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">orgrep1@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Org Rep Two</div>
+                        <span class="user-role">ORG REP</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">orgrep2@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coaches -->
+            <div class="user-category">
+                <div class="category-header">
+                    <h3>Coaches</h3>
+                    <p>Manage teams, sessions, and track player performance</p>
+                </div>
+                <div class="users-grid">
+                    <div class="user-card">
+                        <div class="user-name">Coach One</div>
+                        <span class="user-role">COACH</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">coach1@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Coach Two</div>
+                        <span class="user-role">COACH</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">coach2@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Coach Three</div>
+                        <span class="user-role">COACH</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">coach3@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Coach Four</div>
+                        <span class="user-role">COACH</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">coach4@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Players -->
+            <div class="user-category">
+                <div class="category-header">
+                    <h3>Players</h3>
+                    <p>View personal performance data and session information</p>
+                </div>
+                <div class="users-grid">
+                    <div class="user-card">
+                        <div class="user-name">Player One</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player1@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Two</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player2@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Three</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player3@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Four</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player4@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Five</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player5@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Six</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player6@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Seven</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player7@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Eight</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player8@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Nine</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player9@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Ten</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player10@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Eleven</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player11@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">Player Twelve</div>
+                        <span class="user-role">PLAYER</span>
+                        <div class="credential">
+                            <div class="credential-label">Email:</div>
+                            <div class="credential-value">player12@player1sport.com</div>
+                        </div>
+                        <div class="credential">
+                            <div class="credential-label">Password:</div>
+                            <div class="credential-value">Pl4y3r12345!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="footer">
+            <p>Player1Sport - Professional GPS-Powered Performance Tracking</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">All test accounts use the same password for convenience during onboarding and testing.</p>
+        </div>
+    </div>
+</body>
+</html>
+

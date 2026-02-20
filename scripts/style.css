@@ -1,12 +1,19 @@
-/* Core Reset & Web 2.0 Typography */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-    --bg-color: #ffffff;
+    --bg-color: #c0c0c0;
+    /* silver */
     --text-color: #000000;
     --accent-color: #000000;
-    --font-header: 'Black Ops One', cursive;
-    --font-body: 'Special Elite', cursive;
+    --font-header: "Courier Prime", monospace;
+    --font-body: "Courier Prime", monospace;
+}
+
+/* Ensure full‑width on mobile */
+@media (max-width: 768px) {
+    body {
+        padding: 0 10px;
+    }
 }
 
 body {
@@ -17,8 +24,211 @@ body {
     font-family: var(--font-body);
     line-height: 1.8;
     overflow-x: hidden;
-    /* Prevent horizontal scroll from 3D effects */
     -webkit-font-smoothing: antialiased;
+}
+
+.legacy-toggle-btn {
+    display: block;
+    margin: 0 auto 20px auto;
+    font-family: var(--font-header);
+    font-size: 1.1rem;
+    padding: 10px 24px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* Circular engine toggle button */
+.engine-toggle-btn {
+    width: 48px;
+    height: 48px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-family: var(--font-header);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+@media (max-width: 768px) {
+    .legacy-toggle-btn {
+        font-size: 1.3rem;
+        padding: 14px 30px;
+    }
+}
+
+/* Silver outer frame */
+.engine-frame {
+    background: #c0c0c0;
+    /* silver */
+    border: 8px solid #a0a0a0;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    max-width: 960px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+/* Mobile: stack frame vertically */
+@media (max-width: 768px) {
+    .engine-frame {
+        flex-direction: column;
+        max-width: 100%;
+        margin: 0;
+        border-width: 4px;
+    }
+}
+
+/* TV frame button */
+.tv-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #ff0000;
+    /* red OFF */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-family: var(--font-header);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* TV screen area */
+.tv-screen {
+    width: 600px;
+    height: 400px;
+    background: #000;
+    /* black off */
+    margin: 60px auto;
+    /* center within frame */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Logo placeholder */
+.logo {
+    font-size: 2rem;
+    color: #fff;
+    text-align: center;
+}
+
+/* Header and footer inside frame */
+#main-interface,
+.story-footer {
+    background: #c0c0c0;
+    /* silver */
+    color: #000;
+    padding: 10px;
+}
+
+/* Side panels (placeholders) */
+.side-panel {
+    background: #c0c0c0;
+    width: 60px;
+    flex-shrink: 0;
+}
+
+/* Hide side panels on small screens */
+@media (max-width: 768px) {
+    .side-panel {
+        display: none;
+    }
+}
+
+/* Ensure central content stays black for terminal */
+#engine-viewport {
+    background: #000;
+    color: #fff;
+}
+
+
+/* Standard navigation container for story pages */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding: 0 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* Standard navigation button */
+.nav-button {
+    font-family: var(--font-header);
+    font-size: 1rem;
+    padding: 12px 24px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+/* Larger touch targets on mobile */
+@media (max-width: 768px) {
+    .nav-button {
+        font-size: 1.2rem;
+        padding: 16px 28px;
+    }
+}
+
+.nav-button:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+/* Ensure footer stays at bottom */
+.story-footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 2px solid #000;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+display: block;
+margin: 0 auto 20px auto;
+font-family: var(--font-header);
+font-size: 1.1rem;
+padding: 10px 24px;
+background: #000;
+color: #fff;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+transition: background 0.2s;
+}
+
+.legacy-toggle-btn:hover {
+    background: #333;
 }
 
 /* --- HEADERS (System Data) --- */
@@ -68,6 +278,15 @@ h6,
     margin-bottom: 20px;
 }
 
+.project-logo {
+    width: 60px;
+    height: auto;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .intro-desc {
     font-size: 1.5rem;
     max-width: 700px;
@@ -93,7 +312,7 @@ h6,
     color: #fff;
 }
 
-.readme-link + .readme-link {
+.readme-link+.readme-link {
     margin-left: 1rem;
 }
 
@@ -166,29 +385,90 @@ h6,
     background: #000;
     color: #39FF14;
     padding: 20px;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-header);
     min-height: 60vh;
     border: 5px solid #000;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     #main-interface {
-        padding: 20px;
+        padding: 10px;
     }
+
+    .container {
+        padding: 0 10px;
+    }
+
     #start-screen h1 {
         font-size: 2rem;
     }
+
     .intro-desc {
         font-size: 1.1rem;
     }
+
+    /* Mobile Story Page */
     .story-page-container {
         padding: 30px 20px;
+        margin-bottom: 30px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Mobile Timeline Adjustments */
+    .story-narrative {
+        border-left: 2px dashed #000;
+        padding-left: 20px;
+        /* Reduce from 40px */
+        margin-left: 10px;
+    }
+
+    .timeline-year {
+        position: static;
+        /* Stack naturally */
+        display: inline-block;
+        margin-bottom: 10px;
+        /* Reset absolute positioning */
+        left: auto;
+        top: auto;
+    }
+
+    .timeline-entry {
+        margin-bottom: 40px;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.4rem;
+        margin-top: 5px;
+    }
+
+    .timeline-content p {
+        font-size: 1.1rem;
+    }
+
+    .meta-title {
+        font-size: 1.8rem;
+    }
+
+    /* Logic Box */
+    .sacred-logic-box {
+        padding: 20px;
+        margin: 30px 0;
+    }
+
+    .logic-equation {
+        font-size: 1.4rem;
     }
 }
 
 #terminal-output {
     white-space: pre-wrap;
+    word-break: break-word;
     margin-bottom: 20px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 1.1rem;
+    margin-bottom: 18px;
 }
 
 #terminal-input {
@@ -196,7 +476,7 @@ h6,
     border: none;
     color: #39FF14;
     /* Neon Green */
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-header);
     font-size: 1.2rem;
     width: 80%;
     outline: none;
@@ -214,180 +494,391 @@ h6,
 }
 
 /* --- STORY ENGINE VIEWPORT (Reading Mode) --- */
+/* --- STORY READING EXPERIENCE --- */
 #engine-viewport {
-    perspective: 1500px;
-    /* Setup for 3D page turn */
     min-height: 100vh;
-    background: #f0f0f0;
-    /* Slight gray to distinguish paper */
-    padding: 40px 0;
+    background: #e6e6e6;
+    /* Light gray "desk" background */
+    padding: 60px 0;
+    color: #1a1a1a;
 }
 
-/* The "Paper" Page */
+/* The Unified "File" Container */
 .story-page-container {
-    background: #fff;
-    max-width: 800px;
-    margin: 0 auto 60px auto;
-    /* Space between pages */
-    padding: 60px 80px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
+    background: #fdfbf7;
+    /* Warm off-white paper */
+    color: #1a1a1a;
+    max-width: 720px;
+    /* Optimal reading width */
+    margin: 0 auto 0 auto;
+    /* Continuous scroll feel */
+    padding: 80px 60px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    /* Softer shadow */
+    border-bottom: 1px solid #e0e0e0;
 
-    /* Page Turn Animation Initial State */
-    transform-origin: top center;
-    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
+    /* Animation Entry */
     opacity: 0;
-    transform: rotateX(20deg) translateY(50px);
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.story-page-container:first-child {
+    border-radius: 4px 4px 0 0;
+    margin-top: 40px;
+}
+
+.story-page-container:last-child {
+    border-radius: 0 0 4px 4px;
+    margin-bottom: 100px;
 }
 
 .story-page-container.visible {
     opacity: 1;
-    transform: rotateX(0deg) translateY(0);
+    transform: translateY(0);
 }
 
-/* --- GENETIC CODE COMPONENTS --- */
-
-/* A. Metadata (Header) */
+/* Metadata / Title Page */
 .story-metadata {
-    font-family: var(--font-header);
-    border-bottom: 4px solid #000;
-    padding-bottom: 20px;
-    margin-bottom: 40px;
-    text-align: left;
+    text-align: center;
+    background: #000;
+    color: #fff;
+    padding: 60px 40px;
+    margin: -80px -60px 60px -60px;
+    /* Bleed to edge of container */
+    border-bottom: none;
 }
 
 .meta-row {
     display: block;
-    margin-bottom: 5px;
+    font-family: var(--font-header);
     font-size: 0.9rem;
-    color: #555;
+    letter-spacing: 2px;
+    color: #ccc;
+    /* Light gray for secondary meta */
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
 .meta-title {
-    font-size: 2.5rem;
-    color: #000;
-    margin: 10px 0;
-    line-height: 1.2;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin: 20px 0;
+    font-weight: 700;
+    letter-spacing: -2px;
+    color: #fff;
 }
 
-/* B. Narrative (Timeline) */
+.meta-summary {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #ddd;
+    margin-top: 20px;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+/* Narrative Timeline */
 .story-narrative {
     position: relative;
-    border-left: 2px dashed #000;
-    /* The Anchor Line */
-    padding-left: 40px;
-    margin-left: 20px;
+    padding-left: 0;
+    border: none;
+    margin: 0;
 }
 
+/* Timeline Entry */
 .timeline-entry {
-    margin-bottom: 60px;
+    margin-bottom: 80px;
     position: relative;
 }
 
+/* The Year/marker */
 .timeline-year {
     font-family: var(--font-header);
-    font-weight: bold;
-    font-size: 1.2rem;
-    background: #fff;
-    padding: 5px 10px;
-
-    /* Position on the line */
-    position: absolute;
-    left: -55px;
-    /* Adjust based on padding/border */
-    top: 0;
-    border: 2px solid #000;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000;
+    border-bottom: 2px solid #000;
+    display: block;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 .timeline-content h3 {
     font-size: 1.8rem;
-    margin-bottom: 15px;
+    margin: 0 0 20px 0;
+    font-weight: 700;
+    letter-spacing: -1px;
 }
 
 .timeline-content p {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
+    line-height: 1.7;
     color: #333;
+    margin-bottom: 20px;
+    font-weight: 400;
 }
 
 .timeline-connection {
-    font-style: italic;
-    border-left: 4px solid #ddd;
-    padding-left: 15px;
-    margin-top: 20px;
+    font-family: var(--font-header);
+    font-size: 0.9rem;
     color: #666;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dotted #ccc;
+    font-style: italic;
 }
 
-/* C. Sacred Logic (The Bridge) */
+/* Images in Story */
+.timeline-image-container img,
+.story-cover {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 30px 0;
+    border: 1px solid #000;
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+    /* Brutalist shadow */
+}
+
+.story-cover {
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    margin-bottom: 60px;
+    border-bottom: none;
+    filter: grayscale(100%) contrast(110%);
+}
+
+/* Sacred Logic Box */
 .sacred-logic-box {
-    border: 4px solid #000;
-    padding: 40px;
+    background: #000;
+    color: #fff;
+    padding: 60px;
     text-align: center;
-    margin: 60px 0;
-    background: #fff;
-    position: relative;
+    margin: 80px -60px;
+    /* Full width breakout */
+    border: none;
 }
 
 .sacred-label {
-    background: #000;
-    color: #fff;
-    font-family: var(--font-header);
+    background: #fff;
+    color: #000;
+    display: inline-block;
     padding: 5px 15px;
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    position: static;
+    transform: none;
 }
 
 .logic-equation {
-    font-family: var(--font-header);
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-weight: 300;
     margin: 30px 0;
-    font-weight: bold;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    padding: 30px 0;
 }
 
 .logic-philosophy {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    color: #ccc;
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* Mobile Adjustments for New Design */
+@media (max-width: 768px) {
+    .story-page-container {
+        padding: 40px 25px;
+        width: auto;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .story-page-container:first-child {
+        margin-top: 0;
+        border-radius: 0;
+    }
+
+    .story-page-container:last-child {
+        margin-bottom: 0;
+        border-radius: 0;
+    }
+
+    #engine-viewport {
+        padding: 0;
+        background: #fdfdfd;
+    }
+
+    /* Seamless mobile */
+
+    .meta-title {
+        font-size: 2.5rem;
+    }
+
+    .sacred-logic-box {
+        margin: 40px -25px;
+        padding: 40px 20px;
+    }
+
+    .timeline-image-container img,
+    .story-cover {
+        box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1);
+    }
+}
+
+.courier-prime-regular-italic {
+    font-family: "Courier Prime", monospace;
+    font-weight: 400;
     font-style: italic;
 }
 
-/* D. Cover Image */
-.story-cover {
+.courier-prime-bold-italic {
+    font-family: "Courier Prime", monospace;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Intro Overlay */
+#intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1s ease;
+}
+
+#intro-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#intro-video {
     width: 100%;
-    height: 400px;
+    height: 100%;
     object-fit: cover;
-    border-bottom: 10px solid #000;
-    margin-bottom: 40px;
-    filter: grayscale(100%) contrast(120%);
-    /* Enforce B&W High Contrast */
 }
 
-/* --- UTILITIES --- */
-hr {
-    border: 0;
-    border-top: 2px solid #000;
-    margin: 60px 0;
+/* Navigation Tabs (Connected to Page) */
+.nav-tab-container {
+    position: absolute;
+    left: -40px;
+    /* Pull it outside the container to the left */
+    top: 40px;
+    height: 100%;
 }
 
-.code-block {
-    background: #eee;
-    padding: 15px;
+.nav-return-btn {
+    display: block;
+    background: #000;
+    color: #fff;
+    padding: 15px 10px;
     font-family: var(--font-header);
     font-size: 0.9rem;
-    border-left: 4px solid #000;
-    margin: 20px 0;
+    cursor: pointer;
+    border: none;
+    writing-mode: vertical-rl;
+    /* Vertical text */
+    text-orientation: mixed;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s ease;
+    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 4px 0 0 4px;
+
+    /* Sticky behavior? No, user said top and bottom */
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 12px;
+.nav-return-btn:hover {
+    background: #333;
+    padding-right: 15px;
+    /* Slide out effect */
 }
 
-::-webkit-scrollbar-track {
-    background: #fff;
-    border-left: 1px solid #000;
+/* Mobile: Move to top bar since left-tab doesn't work well on narrow screens */
+@media (max-width: 768px) {
+    .nav-tab-container {
+        position: static;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .nav-return-btn {
+        writing-mode: horizontal-tb;
+        width: 100%;
+        text-align: center;
+        border-radius: 4px;
+        padding: 15px;
+    }
 }
 
-::-webkit-scrollbar-thumb {
-    background: #000;
+/* Scroll Reveal Images */
+.scroll-image {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-image.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Scroll Reveal Images */
+.scroll-image {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-image.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Story Footer */
+.story-footer {
+    border-top: 2px solid #000;
+    padding-top: 40px;
+    margin-top: 60px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Shutdown Button */
+.terminal-action-btn {
+    display: block;
+    margin: 30px auto 0 auto;
+    font-family: var(--font-header);
+    font-size: 1.1rem;
+    padding: 15px 30px;
+    background: transparent;
+    color: #ff6b6b;
+    /* Red warning color */
+    border: 2px solid #ff6b6b;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.terminal-action-btn:hover {
+    background: #ff6b6b;
+    color: #000;
 }

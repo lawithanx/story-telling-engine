@@ -1,51 +1,148 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
-    const startScreen = document.getElementById('start-screen');
-    const startBtn = document.getElementById('start-engine-btn');
+    // Updated DOM Elements for new flow
+    const powerBtn = document.getElementById('power-btn');
+    const rootScreen = document.getElementById('root-screen');
+    const initEngineBtn = document.getElementById('init-engine-btn');
     const mainInterface = document.getElementById('main-interface');
     const terminalInput = document.getElementById('terminal-input');
     const terminalOutput = document.getElementById('terminal-output');
     const engineViewport = document.getElementById('engine-viewport');
     const storyBody = document.getElementById('story-body');
 
+    // Power button shows the black square (rootScreen) and reveals init button
+    if (powerBtn) {
+        powerBtn.addEventListener('click', () => {
+            powerBtn.classList.add('hidden');
+            if (rootScreen) rootScreen.classList.remove('hidden');
+            // initEngineBtn will be revealed in the next stage
+        });
+    }
+
+    // Init Engine button starts the engine (skip boot sequence)
+    if (initEngineBtn) {
+        initEngineBtn.addEventListener('click', () => initEngine(true));
+    }
+
+    // Adjust initEngine to hide rootScreen and show main interface
+    function initEngine(skipBoot = false) {
+        if (skipBoot) {
+            if (rootScreen) rootScreen.classList.add('hidden');
+            if (mainInterface) mainInterface.classList.remove('hidden');
+            loadLibrary();
+        } else {
+            // Not used in new flow, but keep fallback
+            if (powerBtn) powerBtn.textContent = 'INITIALIZING...';
+            setTimeout(() => {
+                if (rootScreen) rootScreen.classList.add('hidden');
+                if (mainInterface) mainInterface.classList.remove('hidden');
+                loadLibrary();
+            }, 2000);
+        }
+    }
+
+
     // State
     let stories = [];
+    let currentCollection = null;
     let isTypingGlobal = false;
     let typeQueue = [];
+
+    if (startBtn) {
+        startBtn.addEventListener('click', () => initEngine(false));
+    }
+    // New two‑step safety switch
+    const toggleBtn = document.getElementById('toggle-engine-btn');
+    const safetyBtn = document.getElementById('safety-switch-btn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            toggleBtn.classList.add('hidden');
+            if (safetyBtn) safetyBtn.classList.remove('hidden');
+        });
+    }
+    if (safetyBtn) {
+        safetyBtn.addEventListener('click', () => initEngine(true));
+    }
     /** @type {'library' | 'story'} — only show full menu when 'library' and on boot or explicit list */
     let engineState = 'library';
 
-    // Initialization
-    if (startBtn) startBtn.addEventListener('click', initEngine);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('story')) {
-        initEngine(true);
+    // Navigation Control
+    function createNavButton() {
+        const btn = document.createElement('button');
+        btn.textContent = 'BACK TO TERMINAL';
+        btn.className = 'nav-return-btn';
+        btn.onclick = returnToTerminal;
+        return btn;
     }
 
+    function addNavTab(container) {
+        const tabContainer = document.createElement('div');
+        tabContainer.className = 'nav-tab-container';
+        tabContainer.appendChild(createNavButton());
+
+        // Ensure the container is relative so absolute positioning works
+        if (getComputedStyle(container).position === 'static') {
+            container.style.position = 'relative';
+        }
+        container.appendChild(tabContainer);
+    }
+
+
     if (terminalInput) {
-        terminalInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
+        terminalInput.addEventListener('input', (e) => {
+            const val = terminalInput.value.trim().toLowerCase();
+            if (!val) return;
+
+            // Check if valid selection or command
+            let isValid = false;
+            if (val === 'exit' || val === 'list' || val === 'ls' || val === 'back') {
+                isValid = true;
+            } else if (engineState === 'library') {
+                if (stories.find(s => s.selection.toLowerCase() === val)) isValid = true;
+            } else if (engineState === 'collection') {
+                if (currentCollection && currentCollection.items.find(s => s.selection.toLowerCase() === val)) isValid = true;
+            }
+
+            if (isValid) {
                 processCommand(terminalInput.value.trim());
                 terminalInput.value = '';
+            }
+        });
+
+        // Disable Enter key for unmatched input since only valid inputs should trigger
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
             }
         });
     }
 
     function initEngine(skipBoot = false) {
-        if (startScreen) startScreen.classList.add('hidden');
-        if (mainInterface) mainInterface.classList.remove('hidden');
-
         if (skipBoot) {
+            if (startScreen) startScreen.classList.add('hidden');
+            if (mainInterface) mainInterface.classList.remove('hidden');
             loadLibrary();
         } else {
-            runBootSequence();
+            // Apply 2-second delay
+            if (startBtn) {
+                startBtn.textContent = 'INITIALIZING...';
+                startBtn.style.opacity = '0.7';
+                startBtn.style.cursor = 'wait';
+            }
+            setTimeout(() => {
+                if (startScreen) startScreen.classList.add('hidden');
+                if (mainInterface) mainInterface.classList.remove('hidden');
+
+                // Clear any previous text to just show the terminal
+                if (terminalOutput) terminalOutput.innerHTML = '';
+
+                runBootSequence();
+            }, 2000);
         }
     }
 
     async function runBootSequence() {
-        await typeLineTerminal("Initializing Story Engine v2.0...", 15);
+        await typeLineTerminal("Initializing StoryEngine v2.0...", 15);
         await delay(200);
         await typeLineTerminal("Loading library modules...", 15);
         await delay(300);
@@ -55,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadLibrary() {
         try {
             engineState = 'library';
-            const response = await fetch('data/library.json');
+            const response = await fetch('data/library.json?t=' + Date.now());
             if (!response.ok) throw new Error('Failed to load library data.');
             stories = await response.json();
 
@@ -69,14 +166,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function getFilename(id) {
+        if (id === "story_binary") return "the_story_of_lost_knowledge.json";
+        if (id === "story_lawithanx") return "story_lawithanx.json";
+        if (id === "story_light") return "story_light.json";
+        return `${id}.json`;
+    }
+
     async function listStories() {
-        printToTerminal("AVAILABLE STORIES:");
-        for (const story of stories) {
-            await typeLineTerminal(`[${story.selection}] ${story.title}`, 10);
+        if (engineState === 'library') {
+            printToTerminal("AVAILABLE AUTHORS / ARCHIVES:");
+            for (const collection of stories) {
+                await typeLineTerminal(`[${collection.selection}] ${collection.title}`, 10);
+            }
+            printToTerminal("--------------------------------");
+            printToTerminal("Please select the number index of the author you choose. (Example: 1)");
+            printToTerminal("Type 'exit' to shutdown the engine.");
+        } else if (engineState === 'collection') {
+            printToTerminal(`AVAILABLE ARCHIVES FOR ${currentCollection.title.toUpperCase()}:`);
+            for (const story of currentCollection.items) {
+                const file = getFilename(story.id);
+                await typeLineTerminal(`[${story.selection}] ${file}  --  ${story.title}`, 10);
+            }
+            printToTerminal("--------------------------------");
+            printToTerminal("Please select the number index of the story you choose. (Example: 1)");
+            printToTerminal("Type 'back' to return to authors list, or 'exit' to shutdown.");
         }
-        printToTerminal("--------------------------------");
-        printToTerminal("Please select the number index of the story you choose. (Example: 1)");
-        printToTerminal("Type 'exit' to shutdown the engine.");
     }
 
     function printToTerminal(text) {
@@ -126,20 +241,38 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (cmd.toLowerCase() === 'back') {
+            if (engineState === 'collection') {
+                engineState = 'library';
+                currentCollection = null;
+                listStories();
+            } else if (engineState === 'story') {
+                returnToTerminal();
+            }
+            return;
+        }
+
         if (cmd.toLowerCase() === 'list' || cmd.toLowerCase() === 'ls') {
             listStories();
             return;
         }
 
-        const selection = stories.find(s => s.selection === cmd);
-        if (selection) {
-            engineState = 'story';
-            await typeLineTerminal("[SYSTEM] ACCESSING DATA_STREAM...", 20);
-            await delay(300);
-            printToTerminal("Loading " + selection.title + "...");
-            await loadStory(selection);
-        } else {
-            printToTerminal("Invalid selection. Please enter a valid number index.");
+        if (engineState === 'library') {
+            const selection = stories.find(s => s.selection === cmd);
+            if (selection) {
+                engineState = 'collection';
+                currentCollection = selection;
+                listStories();
+            }
+        } else if (engineState === 'collection') {
+            const selection = currentCollection.items.find(s => s.selection === cmd);
+            if (selection) {
+                engineState = 'story';
+                await typeLineTerminal("[SYSTEM] ACCESSING DATA_STREAM...", 20);
+                await delay(300);
+                printToTerminal("Loading " + selection.title + "...");
+                await loadStory(selection);
+            }
         }
     }
 
@@ -152,11 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadStory(storyMetadata) {
-        let filename;
-        if (storyMetadata.id === "story_binary") filename = "the_story_of_lost_knowledge.json";
-        else if (storyMetadata.id === "story_lawithanx") filename = "story_lawithanx.json";
-        else if (storyMetadata.id === "story_light") filename = "story_light.json";
-        else filename = `${storyMetadata.id}.json`;
+        const filename = getFilename(storyMetadata.id);
 
         try {
             const response = await fetch(`data/${filename}`);
@@ -267,14 +396,22 @@ document.addEventListener('DOMContentLoaded', () => {
         engineViewport.classList.remove('hidden');
         storyBody.innerHTML = '';
 
+        // Navigation will be added to the metadata page
+
         const metaPage = createPageContainer();
         metaPage.classList.add('visible'); // Force visible
+
+        const summaryText = data.subtitle || data.summary || '';
+        const authorText = data.author || meta.author || 'teacher-j';
+        const projectNum = meta.selection.padStart(3, '0');
+
         metaPage.innerHTML = `
             <div class="story-metadata">
-                <span class="meta-row">PROJECT: ${meta.selection.padStart(3, '0')} // ${meta.title.toUpperCase()}</span>
-                <span class="meta-row">AUTHOR: UNKNOWN</span> 
+                <span class="meta-row">PROJECT: ${projectNum} // ${meta.title.toUpperCase()}</span>
+                <span class="meta-row">AUTHOR: ${authorText}</span> 
                 <span class="meta-row">VERSION: LEGACY</span>
-                <h1 class="meta-title">${meta.title}</h1>
+                <h1 class="meta-title">${data.title || meta.title}</h1>
+                ${summaryText ? `<h4 class="meta-summary" style="margin-top:0;">${summaryText}</h4>` : ''}
             </div>
             <div class="intro-text">
                 <p>Decoding legacy archive format...</p>
@@ -292,11 +429,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 block.className = 'content-block';
 
                 if (typeof item === 'string') {
-                    // Start hidden, mark for typing
+                    // Legacy Mode: Render text directly
+                    let text = item;
+                    // Wrap lines at terminal width (80 chars)
+                    text = text.replace(/(.{1,80})(\s|$)/g, '$1\n');
                     block.classList.add('typewriter-target');
-                    block.dataset.text = item;
+                    block.dataset.text = text;
                     block.textContent = '';
                 } else if (item.type === 'component') {
+                    // Render image inline
                     renderComponent(item, block);
                 }
 
@@ -307,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         addControls();
+        addNavTab(metaPage);
         initScrollAnimation();
     }
 
@@ -316,32 +458,16 @@ document.addEventListener('DOMContentLoaded', () => {
         engineViewport.classList.remove('hidden');
         storyBody.innerHTML = '';
 
-        // 1. COVER IMAGE
-        if (engineData.Metadata.CoverImage) {
-            const coverImg = document.createElement('img');
-            coverImg.src = engineData.Metadata.CoverImage;
-            coverImg.alt = engineData.Metadata.Title + ' — cover';
-            coverImg.classList.add('story-cover');
-            coverImg.loading = 'lazy';
-            coverImg.onerror = () => {
-                coverImg.style.display = 'none';
-            };
 
-            const page = createPageContainer();
-            page.classList.add('visible');
-            page.appendChild(coverImg);
-            storyBody.appendChild(page);
-        }
 
         // 2. METADATA
         const metaPage = createPageContainer();
         metaPage.classList.add('visible');
         const metaHTML = `
             <div class="story-metadata">
-                <span class="meta-row">PROJECT: ${libraryMeta.selection.padStart(3, '0')} // ${engineData.Metadata.Title.toUpperCase()}</span>
-                <span class="meta-row">AUTHOR: ${engineData.Metadata.Author.toUpperCase()}</span>
-                <span class="meta-row">VERSION: ${engineData.Metadata.Version}</span>
+                <span class="meta-row">AUTHOR: ${engineData.Metadata.Author ? engineData.Metadata.Author.toUpperCase() : 'UNKNOWN'}</span>
                 <h1 class="meta-title">${engineData.Metadata.Title}</h1>
+                ${engineData.Metadata.Summary ? `<p class="meta-summary">${engineData.Metadata.Summary}</p>` : ''}
             </div>
         `;
         metaPage.innerHTML = metaHTML;
@@ -364,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3>${entry.Title}</h3>
                         ${entry.Image ? `
                             <div class="timeline-image-container">
-                                <img src="${entry.Image}" alt="${entry.Title}" style="max-width:100%; border: 3px solid #000; margin: 15px 0; display: block;">
+                                <img src="${entry.Image}" alt="${entry.Title}" class="scroll-image" style="max-width:100%; border: 3px solid #000; margin: 15px 0; display: block;">
                             </div>
                         ` : ''}
                         <p class="typewriter-target" data-text="${entry.Description}"></p>
@@ -394,7 +520,47 @@ document.addEventListener('DOMContentLoaded', () => {
             storyBody.appendChild(logicPage);
         }
 
-        addControls();
+        // 5. FOOTER
+        if (engineData.Metadata.Footer) {
+            const footerPage = createPageContainer();
+            footerPage.innerHTML = `
+                <div class="story-footer">
+                    <p>${engineData.Metadata.Footer}</p>
+                </div>
+            `;
+            // Add Bottom Nav
+            const bottomNav = createNavButton();
+            // bottomNav needs slightly different styling if not absolute? 
+            // Just append it to the footer normally for bottom access
+            bottomNav.style.margin = '40px auto 0 auto';
+            bottomNav.style.writingMode = 'horizontal-tb';
+            bottomNav.style.borderRadius = '4px';
+            bottomNav.style.width = 'auto';
+            bottomNav.style.display = 'inline-block';
+
+            footerPage.querySelector('.story-footer').appendChild(document.createElement('br'));
+            footerPage.querySelector('.story-footer').appendChild(bottomNav);
+
+            storyBody.appendChild(footerPage);
+        } else {
+            // If no footer, add a control/nav page at bottom
+            const controlPage = createPageContainer();
+            controlPage.style.textAlign = 'center';
+            controlPage.appendChild(createNavButton());
+            // Override vertical style for bottom button
+            const btn = controlPage.querySelector('.nav-return-btn');
+            btn.style.writingMode = 'horizontal-tb';
+            btn.style.width = 'auto';
+            btn.style.display = 'inline-block';
+            btn.style.borderRadius = '4px';
+
+            storyBody.appendChild(controlPage);
+        }
+
+        // Add Top Nav (Tab)
+        // We do this to the first page (Metadata page)
+        addNavTab(metaPage);
+
         initScrollAnimation();
     }
 
@@ -426,10 +592,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function returnToTerminal() {
         engineViewport.classList.add('hidden');
         mainInterface.classList.remove('hidden');
-        engineState = 'library';
+        if (currentCollection) {
+            engineState = 'collection';
+        } else {
+            engineState = 'library';
+        }
         if (terminalOutput) {
             printToTerminal("--------------------------------");
-            printToTerminal("Back in library. Type 'list' for menu, a number to open a story, or 'exit' to quit.");
+            if (engineState === 'collection') {
+                printToTerminal("Back in collection. Type 'list' for menu, a number to open a story, 'back' to return to authors, or 'exit' to quit.");
+            } else {
+                printToTerminal("Back in library. Type 'list' for menu, a number to open a collection, or 'exit' to quit.");
+            }
         }
         if (terminalInput) terminalInput.focus();
     }
@@ -438,12 +612,16 @@ document.addEventListener('DOMContentLoaded', () => {
         engineViewport.classList.add('hidden');
         mainInterface.classList.add('hidden');
         engineState = 'library';
+        currentCollection = null;
         if (startScreen) startScreen.classList.remove('hidden');
         if (terminalOutput) terminalOutput.innerHTML = '';
         if (terminalInput) terminalInput.value = '';
     }
 
-    // --- SEQUENTIAL TYPEWRITER ANIMATION ENGINE ---
+    const shutdownBtn = document.getElementById('shutdown-btn');
+    if (shutdownBtn) shutdownBtn.addEventListener('click', shutdownEngine);
+
+    // --- ANIMATION ENGINE ---
     function initScrollAnimation() {
         // Page Turn
         const pages = document.querySelectorAll('.story-page-container');
@@ -451,130 +629,48 @@ document.addEventListener('DOMContentLoaded', () => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    pageObserver.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.1 });
         pages.forEach(page => pageObserver.observe(page));
 
-        // Typewriter Queue Logic
+        // Typewriter Effect
         const typeTargets = document.querySelectorAll('.typewriter-target');
-
-        // Reset global state
-        isTypingGlobal = false;
-
         const typeObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Mark as ready to type
-                    entry.target.classList.add('ready-to-type');
-                    processQueue();
-                } else {
-                    // If scrolling UP and it goes out of view, reset it?
-                    // The user said: "if user scrolls back up, the content should reverse or 'erase'"
-                    // If it was already done, we reset it.
-                    if (entry.boundingClientRect.y > 0) {
-                        // Only if it went off screen DOWN-wards (scrolled back UP to see it again?)
-                        // Actually "scrolling back up" implies the user is moving UP the page, so the element moves DOWN out of viewport?
-                        // Or if the user scrolls DOWN past it, then scrolls UP to see it again.
-
-                        // Simple logic: If it leaves the viewport, reset it.
-                        resetTypewriter(entry.target);
+                    const el = entry.target;
+                    const text = el.dataset.text || el.textContent;
+                    el.textContent = '';
+                    el.style.opacity = '1';
+                    let i = 0;
+                    function typeChar() {
+                        if (i < text.length) {
+                            el.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(typeChar, 15);
+                        }
                     }
+                    typeChar();
+                    typeObserver.unobserve(el);
                 }
             });
-        }, {
-            threshold: 0.2,
-            rootMargin: "0px"
         });
-
         typeTargets.forEach(el => typeObserver.observe(el));
 
-        window.scrollTo(0, 0);
-    }
-
-    function processQueue() {
-        // Run loop to find next thing to type
-        if (isTypingGlobal) return; // Busy typing one thing
-
-        // Find the FIRST element in the DOM that is 'ready-to-type' but NOT 'typing-done' and NOT 'is-typing'
-        // This ensures strict sequential order based on DOM position
-        const allTargets = document.querySelectorAll('.typewriter-target');
-        let nextTarget = null;
-
-        for (let i = 0; i < allTargets.length; i++) {
-            const el = allTargets[i];
-
-            // If we find an element that is NOT done...
-            if (!el.classList.contains('typing-done')) {
-                // If it is ready (in view), this is our candidate
-                if (el.classList.contains('ready-to-type')) {
-                    nextTarget = el;
-                    break; // Found the very first one pending
-                } else {
-                    // If we hit an element that is NOT ready (not in view yet), 
-                    // should we stop? Yes, because we shouldn't skip ahead to later paragraphs 
-                    // just because they might be barely visible while an earlier one is off screen.
-                    // However, IntersectionObserver handles the 'ready-to-type' adding.
-                    // So we just pick the first ready one.
-                    // Wait, if item A is done, item B is ready -> type B.
-                    // If item A is NOT done (and not ready), do we wait? 
-                    // User wants "one line at a time". 
-                    // Let's just find the first 'ready' one that isn't done.
-
-                    // Actually, usually you want top-down. 
-                    // If #1 is in view, type #1. If #2 is also in view, wait for #1.
-                    // The loop does exactly that. It finds the first one in reading order.
+        // Image Reveal Logic
+        const imageTargets = document.querySelectorAll('.scroll-image');
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    imageObserver.unobserve(entry.target);
                 }
-            }
-        }
+            });
+        }, { threshold: 0.2 });
+        imageTargets.forEach(img => imageObserver.observe(img));
 
-        if (nextTarget) {
-            typeText(nextTarget);
-        }
-    }
-
-
-    function typeText(element) {
-        isTypingGlobal = true;
-        element.classList.add('is-typing');
-        element.textContent = '';
-
-        const text = element.dataset.text || '';
-        let i = 0;
-        const speed = 25; // Slower, more deliberate "story telling" speed
-
-        function step() {
-            // Check if still valid (didn't get reset)
-            if (!element.classList.contains('is-typing')) {
-                isTypingGlobal = false;
-                processQueue(); // checking again
-                return;
-            }
-
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                // Using timeout for control
-                setTimeout(() => requestAnimationFrame(step), speed);
-            } else {
-                element.classList.remove('is-typing');
-                element.classList.add('typing-done');
-                isTypingGlobal = false;
-
-                // Immediately check for next
-                processQueue();
-            }
-        }
-        step();
-    }
-
-    function resetTypewriter(element) {
-        element.classList.remove('typing-done');
-        element.classList.remove('is-typing');
-        element.classList.remove('ready-to-type');
-        element.textContent = '';
-
-        // If we reset the one currently typing, isTypingGlobal needs to free up?
-        // Logic inside step() handles it: checks for 'is-typing'.
+        window.scrollTo(0, 0);
     }
 });

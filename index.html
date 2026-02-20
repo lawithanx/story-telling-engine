@@ -4,47 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ancient Archives — An interactive story engine that reconstructs narrative from decoupled JSON. Vanilla JS, modular data, terminal-style UI.">
-    <title>Ancient Archives | Interactive Story Engine</title>
+    <meta name="description"
+        content="StoryEngine — An interactive story engine that reconstructs narrative from decoupled JSON. Vanilla JS, modular data, terminal-style UI.">
+    <title>StoryEngine | Interactive Story Engine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Special+Elite&family=IBM+Plex+Mono:wght@400;600&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/storygear.png">
     <link rel="stylesheet" href="scripts/style.css">
 </head>
 
 <body>
 
-    <div id="start-screen" role="banner">
-        <div class="start-content">
-            <h1 class="intro-title">ANCIENT ARCHIVES</h1>
-            <p class="intro-desc">Interactive Story Engine — narrative as data, rendered in real time.</p>
-            <div class="intro-actions">
-                <a href="#about" id="about-link" class="readme-link">[ ABOUT ]</a>
-                <a href="README.md" target="_blank" rel="noopener" class="readme-link">[ DOCUMENTATION ]</a>
-            </div>
-
-            <button id="start-engine-btn" type="button" aria-label="Initialize the story engine">INITIALIZE ENGINE</button>
-        </div>
-        <details id="about" class="about-section" aria-label="About this project">
-            <summary>About this project</summary>
-            <p>Ancient Archives is a front-end project that loads story content from JSON and renders it with a terminal-style interface, typewriter effects, and optional logic exhibits. Built with vanilla HTML, CSS, and JavaScript—no frameworks.</p>
-            <p><strong>Tech:</strong> ES6+, Fetch API, Intersection Observer, modular JSON data.</p>
-        </details>
+    <div class="engine-frame">
+        <!-- TV power button on frame -->
+        <button id="tvbutton" class="tv-button">OFF</button>
+        <!-- TV screen area -->
+        <div id="tv-screen" class="tv-screen"></div>
+        <!-- Side panels (keep for layout) -->
+        <div class="side-panel left"></div>
+        <div class="side-panel right"></div>
     </div>
-
+    <!-- Hidden elements that will be injected later -->
+    <template id="logo-template">
+        <div id="logo" class="logo">LOGO</div>
+    </template>
+    <template id="digitaloffonswitch-template">
+        <button id="digitaloffonswitch" class="engine-toggle-btn">Start Engine</button>
+    </template>
+    <!-- Main interface (terminal) – initially hidden -->
     <header id="main-interface" class="hidden" role="main">
-        <h1 id="main-title">ANCIENT ARCHIVES</h1>
+        <h1 id="main-title">STORYENGINE</h1>
         <div id="terminal-interface">
             <div id="terminal-output"></div>
-
             <div class="input-line">
                 <span class="prompt" aria-hidden="true">admin@engine:~$</span>
-                <label for="terminal-input" class="sr-only">Enter story number or command</label>
-                <input type="text" id="terminal-input" autofocus spellcheck="false" placeholder="Enter number (1–6), list, or exit" aria-label="Terminal input">
+                <label for="terminal-input" class="sr-only">Enter command</label>
+                <input type="text" id="terminal-input" autofocus spellcheck="false" placeholder="Enter command"
+                    aria-label="Terminal input">
             </div>
         </div>
+        <button id="shutdown-btn" class="terminal-action-btn" type="button">TURN OFF ENGINE</button>
     </header>
 
     <main id="engine-viewport" class="hidden" role="region" aria-label="Story content">

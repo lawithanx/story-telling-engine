@@ -4,7 +4,7 @@
 clear
 
 echo "===================================================="
-echo "         ANCIENT ARCHIVES: SERVER LAUNCHER      | ד'סב"
+echo "         STORYENGINE: SERVER LAUNCHER           | ד'סב"
 echo "===================================================="
 echo ""
 echo "Initializing local server environment..."

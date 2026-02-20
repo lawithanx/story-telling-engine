@@ -1,52 +1,46 @@
 {
-    "title": "The Story of LawithanX",
-    "content": [
-        "JEVON ZEEV - Full Stack Engineer, Polymath, and Cross-Disciplinary Creator",
-        "--------------------------------------------------",
-        "[ABOUT]",
-        "I am a cross-disciplinary creator, blending linguistics, coding, cybersecurity, finance, art, and philosophy.",
-        "--------------------------------------------------",
-        "[EDUCATION]",
-        "High School: Matriculated from Fourways High School, South Africa.",
-        "College: CTI Educational Group, Information Systems (Engineering), Higher Certificate level.",
-        "Independent Learning: Continuous upskilling via Udemy, open-source projects, and advanced online courses.",
-        "--------------------------------------------------",
-        "[WORK HISTORY]",
-        "EpicDev – Backend Developer (1 year): Worked as a backend developer while studying Information Systems at CTI Educational Group, gaining foundational professional experience alongside formal education.",
-        "DontWaste – Full Stack Developer (1.5 years): First full-time professional role. Built and maintained full-stack applications, contributing to real-world production systems and collaborative development workflows.",
-        "TEFL – English Teacher (International): Taught English abroad and traveled to Israel, developing strong communication, cultural adaptability, and instructional skills.",
-        "Tensology – Full Stack Engineer (6 months): Worked on full-stack development projects, contributing technical and creative input across design and implementation phases.",
-        "Tech-JCorp – Founder & Sole Proprietor (Present): Independent contractor providing multi-disciplinary services including full-stack development, cybersecurity, digital design, and Web2/Web3 solutions.",
-        "Also developing an open-source education portal focused on teaching linguistics, coding, and project-based learning.",
-        "--------------------------------------------------",
-        "[INTERESTS]",
-        "Cybersecurity & Networking, Science, Blockchain, Artificial Intelligence, Linguistics, Philosophy, Art.",
-        "--------------------------------------------------",
-        "[HOBBIES]",
-        "Skateboarding, Capoeira, Football (Soccer), Squash, Athletics, Boxing, Dancing.",
-        "--------------------------------------------------",
-        "[AWARDS]",
-        "Silver Award – Johan Carinus Art Centre (Sculpture, 16 September 2009).",
-        "Merit & Bronze Award – Johan Carinus Art Centre (Three-dimensional work, May 2010).",
-        "--------------------------------------------------",
-        "[CERTIFICATION]",
-        "TEFL – Teaching English as a Foreign Language.",
-        "--------------------------------------------------",
-        "[PROJECTS]",
-        {
-            "type": "component",
-            "name": "story-image",
-            "props": {
-                "src": "assets/tech_jcorp_logo.png",
-                "alt": "Tech-JCorp Logo",
-                "caption": "Tech-JCorp: Secure Hybrid Digital Solutions"
-            }
+    "ProjectEngine": {
+        "Metadata": {
+            "Title": "FBI CASE FILE – LEAKED",
+            "Author": "NURDYTECHFAN",
+            "Summary": "Edward Snowden",
+            "Version": "MK.IV.1",
+            "CoverImage": "assets/picture.png",
+            "Footer": "CONFIDENTIAL DOCUMENT // DO NOT DISTRIBUTE // PROPERTY OF US GOVERNMENT"
         },
-        "Tech-JCorp: Secure hybrid digital solutions combining three core skills: security, development, and design, delivered through a service portal with an open-source education focus.",
-        "URL: https://www.tech-jcorp.org",
-        "--------------------------------------------------",
-        "[CONTACT]",
-        "Phone: +27 53 770 0480",
-        "Email: lawithanx@tech-jcorp.org"
-    ]
+        "Timeline": [
+            {
+                "year": "LAST SEEN",
+                "Title": "CAFE WESTERN CAPE 01-02-2026",
+                "Description": "<b>PROJECT:</b> 003 // TEMPLE JAGUAR<br><b>DATE:</b> 02/19/2026<br><br><b>Name / Alias:</b> LAWITHANX [encrypted ID: \"wolfgoldenclaw\"] usage unknown<br><b>DOB / Estimated Age:</b> 07/14/1985 (Age 40)<br><b>Address / Last Known Location:</b> Western Cape Cafe CCTV; currently operating in remote jungle regions<br><b>Occupation / Known Affiliations:</b> Independent contractor; highly skilled in reconnaissance, survival, operational security<br><b>Criminal / Threat History:</b> No confirmed criminal record; under investigation – potential unauthorized activity<br><br><b>CASE STATUS:</b> Active / Ongoing Investigation",
+                "Image": "assets/picture.png",
+                "Connection": "LAST SEEN: FILE REF: XJ-003-99"
+            },
+            {
+                "year": "SUMMARY",
+                "Title": "INTELLIGENCE ASSESSMENT",
+                "Description": "Subject is under surveillance due to suspected connections with high-value clandestine operations. Lawithanx exhibits advanced operational skills, including evasion, secure communications, and coordination with unidentified associates. Intelligence indicates involvement in sensitive locations of interest. Subject remains cautious and maintains minimal exposure to conventional tracking or electronic surveillance.",
+                "Connection": "SURVEILLANCE: ONGOING"
+            },
+            {
+                "year": "NOTES",
+                "Title": "OPERATIVE LOG",
+                "Description": "<ul style='padding-left: 20px; list-style-type: square;'><li><b>Surveillance Conducted:</b> Field reconnaissance; remote observation in inaccessible jungle regions</li><li><b>Observed Behavior:</b> Operates independently; highly disciplined; contacts unknown; exhibits expert evasion tactics</li><li><b>Intelligence Collected:</b> Leaked footage confirms brief activity in critical areas; movements consistent with highly skilled contractor patterns</li><li><b>Additional Notes:</b> Subject suspected to know whereabouts of the Temple and the Jaguar. Jaguar is prime target of interest. Artifact/site may contain advanced or anomalous technology.</li></ul>",
+                "Connection": "TARGET: JAGUAR"
+            },
+            {
+                "year": "ACTIONS",
+                "Title": "NEXT STEPS / RECOMMENDED ACTIONS",
+                "Description": "<ul style='padding-left: 20px; list-style-type: square;'><li>Continue remote monitoring and data collection</li><li>Verify identities and roles of local contacts</li><li>Evaluate potential engagement and further intelligence acquisition</li><li>Assess feasibility of surveillance on Temple vicinity and any artifact/creature activity</li></ul>",
+                "Connection": "STATUS: PENDING APPROVAL"
+            }
+        ],
+        "SacredLogic": {
+            "Concept": {
+                "name": "CONFIDENTIALITY NOTICE",
+                "Equation": "RESTRICTED ACCESS",
+                "Philosophy": "Document intended for internal FBI use only. Handle per FBI records security protocol."
+            }
+        }
+    }
 }

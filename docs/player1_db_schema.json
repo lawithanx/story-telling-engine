@@ -1,0 +1,563 @@
+{
+  "database": "player1sport",
+  "tables": {
+    "p1_dev_meta": {
+      "row_count": 108,
+      "primary_key": null,
+      "columns": [
+        {
+          "name": "timezone",
+          "type": "text",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "Description",
+          "type": "text",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "event_id",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "device_id",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "Type",
+          "type": "text",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "Athlete",
+          "type": "text",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "Comments",
+          "type": "text",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "start_dt",
+          "type": "datetime(3)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "end_dt",
+          "type": "datetime(3)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        }
+      ],
+      "indexes": {},
+      "sample_data": {
+        "timezone": "+02:00",
+        "Description": "PV 1st team hockey training, first testing with them",
+        "event_id": 101,
+        "device_id": 302,
+        "Type": "test",
+        "Athlete": "Luca Meets",
+        "Comments": "Did a pretty intense warm up before using device, quite a bit of running ",
+        "start_dt": "2025-03-04 16:20:00",
+        "end_dt": "2025-03-04 17:25:00"
+      }
+    },
+    "p1_dev_processed": {
+      "row_count": 4007962,
+      "primary_key": null,
+      "columns": [
+        {
+          "name": "device_id",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": "0",
+          "extra": ""
+        },
+        {
+          "name": "timestamp",
+          "type": "timestamp(3)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "latitude",
+          "type": "double(10,7)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "longitude",
+          "type": "double(10,7)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "speed",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "heading",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "num_sats",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "hdop",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "x_accel",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "y_accel",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "z_accel",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "timedelta",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "seconds_since_start",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "latitude_previous",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "longitude_previous",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "mag_accel",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "is_sprint",
+          "type": "tinyint(1)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "sprint_num",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "speed_sprint",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "distance_sprint",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "distance_nonsprint",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "zone",
+          "type": "text",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "period_num",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "datetime",
+          "type": "timestamp(3)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        }
+      ],
+      "indexes": {},
+      "sample_data": {
+        "device_id": 301,
+        "timestamp": "2025-03-11 14:25:00.300000",
+        "latitude": -34.067734,
+        "longitude": 18.857618,
+        "speed": 0.38878,
+        "heading": 304,
+        "num_sats": 9,
+        "hdop": 1,
+        "x_accel": -0.568218,
+        "y_accel": 0.149689,
+        "z_accel": 0,
+        "timedelta": 100.0,
+        "seconds_since_start": 0.3,
+        "latitude_previous": -34.0677,
+        "longitude_previous": 18.8576,
+        "distance": 0.0,
+        "mag_accel": 0.622066,
+        "is_sprint": 0,
+        "sprint_num": 0,
+        "speed_sprint": 0.0,
+        "distance_sprint": 0.0,
+        "distance_nonsprint": 0.0,
+        "zone": "recovery",
+        "period_num": 0,
+        "datetime": "2025-03-11 16:25:00.300000"
+      }
+    },
+    "p1_dev_raw": {
+      "row_count": 5418267,
+      "primary_key": null,
+      "columns": [
+        {
+          "name": "x_accel",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "y_accel",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "z_accel",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "device_id",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "num_sats",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "hdop",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "lat",
+          "type": "double(10,7)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "long",
+          "type": "double(10,7)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "speed_kmh",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "timestamp",
+          "type": "timestamp(3)",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        }
+      ],
+      "indexes": {},
+      "sample_data": {
+        "x_accel": -11.0,
+        "y_accel": 6.0,
+        "z_accel": 1011.0,
+        "device_id": 304,
+        "num_sats": 4,
+        "hdop": 15,
+        "lat": -34.067249,
+        "long": 18.857738,
+        "speed_kmh": 0.3,
+        "direction": 0,
+        "timestamp": "2025-03-04 14:08:00.200000"
+      }
+    },
+    "p1_dev_summaries": {
+      "row_count": 103,
+      "primary_key": null,
+      "columns": [
+        {
+          "name": "device_id",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "event_id",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "metres_per_minutes",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "speed",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "max_speed",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "duration",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "sprint_count",
+          "type": "int",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "distance_sprint",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "recovery_distance",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "jogging_distance",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "high-speed running_distance",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        },
+        {
+          "name": "sprinting_distance",
+          "type": "float",
+          "null": false,
+          "key": "",
+          "default": null,
+          "extra": ""
+        }
+      ],
+      "indexes": {},
+      "sample_data": {
+        "device_id": 302,
+        "event_id": 101,
+        "metres_per_minutes": 99.7539,
+        "distance": 6384.25,
+        "speed": 1.31985,
+        "max_speed": 17.8283,
+        "duration": 3850400000000.0,
+        "sprint_count": 15,
+        "distance_sprint": 327.408,
+        "recovery_distance": 2554.12,
+        "jogging_distance": 1766.97,
+        "high-speed running_distance": 1718.24,
+        "sprinting_distance": 344.917
+      }
+    }
+  }
+}
