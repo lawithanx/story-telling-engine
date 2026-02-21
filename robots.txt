@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /data/
+Disallow: /scripts/
+Disallow: /projdoc/
+Disallow: /assets/
+Allow: /
+
+# Only the ancient artifact index is visible to the digital crawlers.

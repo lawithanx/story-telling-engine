@@ -89,6 +89,7 @@ StoryEngine/
 - **Security** — Terminal input is sanitized (script/event handlers blocked) before use.
 - **Accessibility** — ARIA labels, `sr-only` helper, semantic sections, keyboard-friendly terminal.
 - **Responsive** — Viewport meta and flexible layout; terminal and story pages adapt.
+- **Environment & SEO** — Uses a `.env` file (ignored by git in `.gitignore`) for storing sensitive project settings. A `robots.txt` intentionally limits AI scraper access to internal structures, presenting the application externally solely as an "ancient artifact."
 
 ---
 

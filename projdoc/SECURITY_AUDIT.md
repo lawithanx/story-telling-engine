@@ -42,12 +42,14 @@ The system blocks the following patterns to prevent basic XSS or unauthorized ex
 |----|----------|-------------|--------|
 | V-01 | Low | **XSS via JSON:** Malicious story files could inject scripts. | Acceptable Risk (Content is static/trusted) |
 | V-02 | Low | **Path Traversal:** Terminal input is not used directly in file paths. | Mitigated (Indirect selection) |
-| V-03 | Info | **Information Disclosure:** Directory listing enabled by default in Python server. | Standard Dev Behavior (Disable in Prod) |
+| V-03 | Info | **Information Disclosure:** Directory/source listing accessible by AI scrapers. | Mitigated (`robots.txt` added to disallow internal paths) |
+| V-04 | Info | **Secret Leakage:** Risk of committing sensitive configs. | Mitigated (`.env` added and fully tracked by `.gitignore`) |
 
 ## 4. Recommendations
 1. **Production Deployment:** Disable directory listing if deploying to a public web server (e.g., Nginx/Apache configuration).
 2. **Content Validation:** If community stories are allowed in the future, implement a strict schema validator and HTML sanitizer (e.g., DOMPurify) before injecting content.
 3. **CSP:** Add a Content Security Policy (CSP) header to restrict script sources to self.
+4. **AI/Bot Control:** The current `robots.txt` limits scraper knowledge intentionally, branding the site as an 'ancient artifact'. Monitor search console to ensure crawlers obey the exclusions.
 
 ## 5. Conclusion
 The system is secure for its intended use case as a personal portfolio/story engine. Interactive elements are sandboxed via the `checkSystemIntegrity` function, and file access is restricted to the logic within `engine.js`.

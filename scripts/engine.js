@@ -1,46 +1,120 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Updated DOM Elements for new flow
-    const powerBtn = document.getElementById('power-btn');
-    const rootScreen = document.getElementById('root-screen');
-    const initEngineBtn = document.getElementById('init-engine-btn');
+    // DOM Elements
+    const tvButton = document.getElementById('tvbutton');
+    const tvScreen = document.getElementById('tv-screen');
+    const engineFrame = document.querySelector('.engine-frame');
     const mainInterface = document.getElementById('main-interface');
     const terminalInput = document.getElementById('terminal-input');
     const terminalOutput = document.getElementById('terminal-output');
     const engineViewport = document.getElementById('engine-viewport');
     const storyBody = document.getElementById('story-body');
 
-    // Power button shows the black square (rootScreen) and reveals init button
-    if (powerBtn) {
-        powerBtn.addEventListener('click', () => {
-            powerBtn.classList.add('hidden');
-            if (rootScreen) rootScreen.classList.remove('hidden');
-            // initEngineBtn will be revealed in the next stage
+    // Video elements (both live inside tv-screen)
+    const bootVideo = document.getElementById('boot-video');
+    const shutdownVideo = document.getElementById('shutdown-video');
+    // Hide both videos initially
+    if (bootVideo) bootVideo.style.display = 'none';
+    if (shutdownVideo) shutdownVideo.style.display = 'none';
+
+    // Shared mute state — applies to both videos
+    let isMuted = false;
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+        // Set initial UI
+        muteBtn.textContent = '🔊';
+        muteBtn.classList.add('unmuted');
+
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            const radioAudio = document.getElementById('radio-audio');
+            const onAudio = document.getElementById('on-audio');
+            const offAudio = document.getElementById('off-audio');
+
+            if (bootVideo) bootVideo.muted = true; // Videos always muted to prefer explicit audio tracks
+            if (shutdownVideo) shutdownVideo.muted = true;
+
+            if (radioAudio) radioAudio.muted = isMuted;
+            if (onAudio) onAudio.muted = isMuted;
+            if (offAudio) offAudio.muted = isMuted;
+
+            const inter01 = document.getElementById('inter-01');
+            const inter02 = document.getElementById('inter-02');
+            if (inter01) inter01.muted = isMuted;
+            if (inter02) inter02.muted = isMuted;
+
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            muteBtn.classList.toggle('unmuted', !isMuted);
         });
     }
 
-    // Init Engine button starts the engine (skip boot sequence)
-    if (initEngineBtn) {
-        initEngineBtn.addEventListener('click', () => initEngine(true));
-    }
+    // Logo flash — plays inside the tv-screen div
+    function showLogoFlash() {
+        return new Promise((resolve) => {
+            if (!tvScreen) { resolve(); return; }
+            const flash = document.createElement('div');
+            flash.className = 'screen-logo-flash';
+            flash.innerHTML = `
+                <img src="assets/storygear.png" alt="StoryEngine Logo">
+                <div class="logo-title">STORYENGINE</div>
+            `;
+            tvScreen.appendChild(flash);
 
-    // Adjust initEngine to hide rootScreen and show main interface
-    function initEngine(skipBoot = false) {
-        if (skipBoot) {
-            if (rootScreen) rootScreen.classList.add('hidden');
-            if (mainInterface) mainInterface.classList.remove('hidden');
-            loadLibrary();
-        } else {
-            // Not used in new flow, but keep fallback
-            if (powerBtn) powerBtn.textContent = 'INITIALIZING...';
+            // Hold for 2s, then fade out
             setTimeout(() => {
-                if (rootScreen) rootScreen.classList.add('hidden');
-                if (mainInterface) mainInterface.classList.remove('hidden');
-                loadLibrary();
+                flash.classList.add('fade-out');
+                setTimeout(() => {
+                    flash.remove();
+                    resolve();
+                }, 600);
             }, 2000);
-        }
+        });
     }
 
+    // Power label element
+    const powerLabel = document.getElementById('power-label');
+    let isOn = false;
+
+    // TV power button — triggers: screen on → video → black → logo → terminal
+    if (tvButton) {
+        tvButton.addEventListener('click', () => {
+            if (!isOn) {
+                // Turn ON
+                isOn = true;
+                tvButton.classList.add('active');
+                if (powerLabel) { powerLabel.textContent = 'ON'; powerLabel.classList.add('on'); }
+
+                if (bootVideo) {
+                    bootVideo.muted = true; // Use separate audio file
+                    bootVideo.style.display = 'block';
+                    bootVideo.currentTime = 0;
+                    bootVideo.play();
+
+                    const onAudio = document.getElementById('on-audio');
+                    if (onAudio) {
+                        onAudio.muted = isMuted;
+                        onAudio.currentTime = 0;
+                        onAudio.play().catch(e => console.error("On audio play failed:", e));
+                    }
+
+                    bootVideo.addEventListener('ended', async () => {
+                        bootVideo.classList.add('video-fade-out');
+                        await new Promise(r => setTimeout(r, 800));
+                        bootVideo.style.display = 'none';
+                        bootVideo.classList.remove('video-fade-out');
+
+                        await showLogoFlash();
+                        initEngine(true);
+                    }, { once: true });
+                } else {
+                    initEngine(true);
+                }
+            } else {
+                // Turn OFF
+                shutdownEngine();
+            }
+        });
+    }
 
     // State
     let stories = [];
@@ -48,23 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let isTypingGlobal = false;
     let typeQueue = [];
 
-    if (startBtn) {
-        startBtn.addEventListener('click', () => initEngine(false));
-    }
-    // New two‑step safety switch
-    const toggleBtn = document.getElementById('toggle-engine-btn');
-    const safetyBtn = document.getElementById('safety-switch-btn');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            toggleBtn.classList.add('hidden');
-            if (safetyBtn) safetyBtn.classList.remove('hidden');
-        });
-    }
-    if (safetyBtn) {
-        safetyBtn.addEventListener('click', () => initEngine(true));
-    }
     /** @type {'library' | 'story'} — only show full menu when 'library' and on boot or explicit list */
     let engineState = 'library';
+
+    // Scroll the terminal container to bottom (like a real shell)
+    const terminalContainer = document.getElementById('terminal-interface');
+    function scrollTerminal() {
+        if (terminalContainer) terminalContainer.scrollTop = terminalContainer.scrollHeight;
+    }
 
     // Navigation Control
     function createNavButton() {
@@ -89,55 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     if (terminalInput) {
-        terminalInput.addEventListener('input', (e) => {
-            const val = terminalInput.value.trim().toLowerCase();
-            if (!val) return;
-
-            // Check if valid selection or command
-            let isValid = false;
-            if (val === 'exit' || val === 'list' || val === 'ls' || val === 'back') {
-                isValid = true;
-            } else if (engineState === 'library') {
-                if (stories.find(s => s.selection.toLowerCase() === val)) isValid = true;
-            } else if (engineState === 'collection') {
-                if (currentCollection && currentCollection.items.find(s => s.selection.toLowerCase() === val)) isValid = true;
-            }
-
-            if (isValid) {
-                processCommand(terminalInput.value.trim());
-                terminalInput.value = '';
-            }
-        });
-
-        // Disable Enter key for unmatched input since only valid inputs should trigger
+        // Submit any command on Enter — like a real shell
         terminalInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
+                const val = terminalInput.value.trim();
+                if (val) {
+                    processCommand(val);
+                    terminalInput.value = '';
+                }
             }
         });
     }
 
     function initEngine(skipBoot = false) {
+        // Swap: hide screen, show terminal — frame stays
+        if (tvScreen) tvScreen.classList.add('hidden');
+        if (mainInterface) mainInterface.classList.remove('hidden');
+
         if (skipBoot) {
-            if (startScreen) startScreen.classList.add('hidden');
-            if (mainInterface) mainInterface.classList.remove('hidden');
             loadLibrary();
         } else {
-            // Apply 2-second delay
-            if (startBtn) {
-                startBtn.textContent = 'INITIALIZING...';
-                startBtn.style.opacity = '0.7';
-                startBtn.style.cursor = 'wait';
-            }
-            setTimeout(() => {
-                if (startScreen) startScreen.classList.add('hidden');
-                if (mainInterface) mainInterface.classList.remove('hidden');
-
-                // Clear any previous text to just show the terminal
-                if (terminalOutput) terminalOutput.innerHTML = '';
-
-                runBootSequence();
-            }, 2000);
+            if (terminalOutput) terminalOutput.innerHTML = '';
+            runBootSequence();
         }
     }
 
@@ -180,8 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 await typeLineTerminal(`[${collection.selection}] ${collection.title}`, 10);
             }
             printToTerminal("--------------------------------");
-            printToTerminal("Please select the number index of the author you choose. (Example: 1)");
-            printToTerminal("Type 'exit' to shutdown the engine.");
         } else if (engineState === 'collection') {
             printToTerminal(`AVAILABLE ARCHIVES FOR ${currentCollection.title.toUpperCase()}:`);
             for (const story of currentCollection.items) {
@@ -189,8 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 await typeLineTerminal(`[${story.selection}] ${file}  --  ${story.title}`, 10);
             }
             printToTerminal("--------------------------------");
-            printToTerminal("Please select the number index of the story you choose. (Example: 1)");
-            printToTerminal("Type 'back' to return to authors list, or 'exit' to shutdown.");
         }
     }
 
@@ -199,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const line = document.createElement('div');
         line.textContent = text;
         terminalOutput.appendChild(line);
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        scrollTerminal();
     }
 
     function typeLineTerminal(text, speed = 25) {
@@ -213,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (i < text.length) {
                     line.textContent += text.charAt(i);
                     i++;
-                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                    scrollTerminal();
                     setTimeout(typeChar, speed);
                 } else {
                     resolve();
@@ -236,12 +271,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (cmd.toLowerCase() === 'exit') {
+        const lower = cmd.toLowerCase();
+
+        if (lower === 'exit') {
             shutdownEngine();
             return;
         }
 
-        if (cmd.toLowerCase() === 'back') {
+        if (lower === 'clear') {
+            if (terminalOutput) terminalOutput.innerHTML = '';
+            return;
+        }
+
+        if (lower === 'back') {
             if (engineState === 'collection') {
                 engineState = 'library';
                 currentCollection = null;
@@ -252,8 +294,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (cmd.toLowerCase() === 'list' || cmd.toLowerCase() === 'ls') {
+        if (lower === 'list' || lower === 'ls') {
             listStories();
+            return;
+        }
+
+        // Easter egg: secret
+        if (lower === 'secret') {
+            await typeLineTerminal('Job 41:1: "Can you draw out Leviathan with a fishhook? Or press down his tongue with a cord?"', 20);
+            return;
+        }
+
+        // Easter egg: any variation of 'lawithanx'
+        if (lower === 'lawithanx') {
+            await typeLineTerminal("[SYSTEM] ACCESS GRANTED — CLASSIFIED FILE DETECTED...", 15);
+            await delay(500);
+            printToTerminal("Loading FBI CASE FILE - LEAKED...");
+            engineState = 'story';
+            await loadStory({ id: 'story_lawithanx', title: 'FBI CASE FILE - LEAKED', selection: '1' });
             return;
         }
 
@@ -263,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 engineState = 'collection';
                 currentCollection = selection;
                 listStories();
+                return;
             }
         } else if (engineState === 'collection') {
             const selection = currentCollection.items.find(s => s.selection === cmd);
@@ -272,8 +331,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 await delay(300);
                 printToTerminal("Loading " + selection.title + "...");
                 await loadStory(selection);
+                return;
             }
         }
+
+        // Echo anything else — like a real shell
+        printToTerminal(cmd);
     }
 
     function checkSystemIntegrity(input) {
@@ -295,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rawData.ProjectEngine) {
                 renderStoryv2(rawData.ProjectEngine, storyMetadata);
             } else {
-                renderLegacyStory(rawData, storyMetadata);
+                throw new Error("Story format invalid. Missing ProjectEngine structure.");
             }
         } catch (error) {
             printToTerminal(`Error: ${error.message}`);
@@ -304,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 errLine.className = 'terminal-error';
                 errLine.textContent = `Failed to load "${storyMetadata.title}". Check console for details.`;
                 terminalOutput.appendChild(errLine);
-                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                scrollTerminal();
             }
         }
     }
@@ -385,76 +448,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             output.innerHTML = html;
         }
-
         btn.onclick = run;
     }
 
 
-    /* --- LEGACY RENDERER --- */
-    function renderLegacyStory(data, meta) {
-        mainInterface.classList.add('hidden');
-        engineViewport.classList.remove('hidden');
-        storyBody.innerHTML = '';
-
-        // Navigation will be added to the metadata page
-
-        const metaPage = createPageContainer();
-        metaPage.classList.add('visible'); // Force visible
-
-        const summaryText = data.subtitle || data.summary || '';
-        const authorText = data.author || meta.author || 'teacher-j';
-        const projectNum = meta.selection.padStart(3, '0');
-
-        metaPage.innerHTML = `
-            <div class="story-metadata">
-                <span class="meta-row">PROJECT: ${projectNum} // ${meta.title.toUpperCase()}</span>
-                <span class="meta-row">AUTHOR: ${authorText}</span> 
-                <span class="meta-row">VERSION: LEGACY</span>
-                <h1 class="meta-title">${data.title || meta.title}</h1>
-                ${summaryText ? `<h4 class="meta-summary" style="margin-top:0;">${summaryText}</h4>` : ''}
-            </div>
-            <div class="intro-text">
-                <p>Decoding legacy archive format...</p>
-            </div>
-        `;
-        storyBody.appendChild(metaPage);
-
-        if (data.content && Array.isArray(data.content)) {
-            const contentPage = createPageContainer();
-            const wrapper = document.createElement('div');
-            wrapper.className = 'legacy-content-wrapper';
-
-            data.content.forEach(item => {
-                const block = document.createElement('div');
-                block.className = 'content-block';
-
-                if (typeof item === 'string') {
-                    // Legacy Mode: Render text directly
-                    let text = item;
-                    // Wrap lines at terminal width (80 chars)
-                    text = text.replace(/(.{1,80})(\s|$)/g, '$1\n');
-                    block.classList.add('typewriter-target');
-                    block.dataset.text = text;
-                    block.textContent = '';
-                } else if (item.type === 'component') {
-                    // Render image inline
-                    renderComponent(item, block);
-                }
-
-                wrapper.appendChild(block);
-            });
-            contentPage.appendChild(wrapper);
-            storyBody.appendChild(contentPage);
-        }
-
-        addControls();
-        addNavTab(metaPage);
-        initScrollAnimation();
-    }
-
     /* --- V2 RENDERER --- */
     function renderStoryv2(engineData, libraryMeta) {
         mainInterface.classList.add('hidden');
+        if (engineFrame) engineFrame.classList.add('hidden');
         engineViewport.classList.remove('hidden');
         storyBody.innerHTML = '';
 
@@ -591,6 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function returnToTerminal() {
         engineViewport.classList.add('hidden');
+        if (engineFrame) engineFrame.classList.remove('hidden');
         mainInterface.classList.remove('hidden');
         if (currentCollection) {
             engineState = 'collection';
@@ -609,17 +611,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function shutdownEngine() {
+        // Hide terminal and story viewport immediately
         engineViewport.classList.add('hidden');
         mainInterface.classList.add('hidden');
         engineState = 'library';
         currentCollection = null;
-        if (startScreen) startScreen.classList.remove('hidden');
+
+        // Show tv-screen so we can play the off video in it
+        if (tvScreen) tvScreen.classList.remove('hidden');
+
+        // Reset boot video
+        if (bootVideo) {
+            bootVideo.pause();
+            bootVideo.currentTime = 0;
+            bootVideo.style.display = 'none';
+            bootVideo.classList.remove('video-fade-out');
+        }
+        // Remove any logo flash still on screen
+        if (tvScreen) {
+            const flash = tvScreen.querySelector('.screen-logo-flash');
+            if (flash) flash.remove();
+        }
         if (terminalOutput) terminalOutput.innerHTML = '';
         if (terminalInput) terminalInput.value = '';
-    }
 
-    const shutdownBtn = document.getElementById('shutdown-btn');
-    if (shutdownBtn) shutdownBtn.addEventListener('click', shutdownEngine);
+        // Play shutdown video in the screen
+        if (shutdownVideo) {
+            shutdownVideo.muted = true; // Video itself is always muted
+            shutdownVideo.style.display = 'block';
+            // Start from the middle of the video instead of the beginning for a faster, punchier effect
+            shutdownVideo.currentTime = 2.0;
+            shutdownVideo.play().catch(e => console.error("Shutdown video play failed:", e));
+
+            const offAudio = document.getElementById('off-audio');
+            if (offAudio) {
+                offAudio.muted = isMuted;
+                offAudio.currentTime = 2.0; // Play synced audio starting at 2s
+                offAudio.play().catch(e => console.error("Off audio play failed:", e));
+            }
+
+            shutdownVideo.addEventListener('ended', () => {
+                shutdownVideo.style.display = 'none';
+                // Reset button to OFF state
+                isOn = false;
+                tvButton.classList.remove('active');
+                if (powerLabel) { powerLabel.textContent = 'OFF'; powerLabel.classList.remove('on'); }
+            }, { once: true });
+        } else {
+            // No shutdown video — reset immediately
+            isOn = false;
+            tvButton.classList.remove('active');
+            if (powerLabel) { powerLabel.textContent = 'OFF'; powerLabel.classList.remove('on'); }
+        }
+    }
 
     // --- ANIMATION ENGINE ---
     function initScrollAnimation() {
@@ -673,4 +717,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.scrollTo(0, 0);
     }
+
+    // Manual button toggle
+    const manualBtn = document.getElementById('manual-btn');
+    const manualOverlay = document.getElementById('manual-overlay');
+    const closeManual = document.getElementById('close-manual');
+
+    if (manualBtn && manualOverlay) {
+        manualBtn.addEventListener('click', () => {
+            manualOverlay.classList.toggle('hidden');
+        });
+    }
+    if (closeManual && manualOverlay) {
+        closeManual.addEventListener('click', () => {
+            manualOverlay.classList.add('hidden');
+        });
+    }
+
+    // Vintage Radio Toggle & Interference Logic
+    const vintageRadio = document.getElementById('vintage-radio');
+    const radioAudio = document.getElementById('radio-audio');
+    const inter01 = document.getElementById('inter-01');
+    const inter02 = document.getElementById('inter-02');
+
+    let radioInterferenceInterval = null;
+    let radioInterferenceDuration = null;
+    let isInterfering = false;
+    let currentInterferenceAudio = null;
+
+    if (vintageRadio && radioAudio) {
+        // Sync initial mute state
+        radioAudio.muted = isMuted;
+        if (inter01) inter01.muted = isMuted;
+        if (inter02) inter02.muted = isMuted;
+
+        function clearInterferences() {
+            if (radioInterferenceInterval) clearTimeout(radioInterferenceInterval);
+            if (radioInterferenceDuration) clearTimeout(radioInterferenceDuration);
+            if (currentInterferenceAudio) {
+                currentInterferenceAudio.pause();
+                currentInterferenceAudio.currentTime = 0;
+            }
+            isInterfering = false;
+            currentInterferenceAudio = null;
+            radioAudio.volume = 1.0;
+        }
+
+        function scheduleInterference() {
+            // Chooses random time between 15s to 45s to play an interference
+            const nextInterferenceTime = Math.random() * 30000 + 15000;
+            radioInterferenceInterval = setTimeout(triggerInterference, nextInterferenceTime);
+        }
+
+        function triggerInterference() {
+            if (radioAudio.paused && !isInterfering) return; // Radio is off globally
+
+            isInterfering = true;
+            radioAudio.volume = 0.1; // Turn down main song instead of pausing
+
+            // Randomly choose track 1 or 2
+            const trackToPlay = Math.random() > 0.5 ? inter01 : inter02;
+            currentInterferenceAudio = trackToPlay;
+
+            if (currentInterferenceAudio) {
+                currentInterferenceAudio.currentTime = 0;
+                currentInterferenceAudio.play().catch(e => console.error("Interference play failed", e));
+            }
+
+            // Play for random duration between 3s and 13s
+            const duration = Math.random() * 10000 + 3000;
+            radioInterferenceDuration = setTimeout(() => {
+                if (currentInterferenceAudio) {
+                    currentInterferenceAudio.pause();
+                }
+                isInterfering = false;
+                currentInterferenceAudio = null;
+                // Resume main song
+                if (vintageRadio.classList.contains('playing')) {
+                    radioAudio.volume = 1.0; // Restore volume
+                    scheduleInterference();
+                }
+            }, duration);
+        }
+
+        vintageRadio.addEventListener('click', () => {
+            if (!vintageRadio.classList.contains('playing')) {
+                // Turn ON
+                radioAudio.play().catch(e => console.error("Radio play failed:", e));
+                vintageRadio.classList.add('playing');
+                scheduleInterference();
+            } else {
+                // Turn OFF entirely
+                radioAudio.pause();
+                vintageRadio.classList.remove('playing');
+                clearInterferences(); // Stop any pending or running interference
+            }
+        });
+    }
+
 });
