@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const filename = getFilename(storyMetadata.id);
 
         try {
-            const response = await fetch(`data/${filename}`);
+            const response = await fetch(`data/${filename}?t=` + Date.now());
             if (!response.ok) throw new Error(`Story file not found.`);
             const rawData = await response.json();
 
@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (terminalOutput) {
                 const errLine = document.createElement('div');
                 errLine.className = 'terminal-error';
-                errLine.textContent = `Failed to load "${storyMetadata.title}". Check console for details.`;
+                errLine.textContent = `Failed to load "${storyMetadata.title}". Check manuel for details.`;
                 terminalOutput.appendChild(errLine);
                 scrollTerminal();
             }
