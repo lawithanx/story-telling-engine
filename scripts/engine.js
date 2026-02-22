@@ -21,29 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMuted = false;
     const muteBtn = document.getElementById('mute-btn');
     if (muteBtn) {
-        // Set initial UI
-        muteBtn.textContent = '🔊';
+        muteBtn.textContent = '•';
         muteBtn.classList.add('unmuted');
 
         muteBtn.addEventListener('click', () => {
             isMuted = !isMuted;
-            const radioAudio = document.getElementById('radio-audio');
             const onAudio = document.getElementById('on-audio');
             const offAudio = document.getElementById('off-audio');
+            const logoAudio = document.getElementById('logo-audio');
 
             if (bootVideo) bootVideo.muted = true; // Videos always muted to prefer explicit audio tracks
             if (shutdownVideo) shutdownVideo.muted = true;
 
-            if (radioAudio) radioAudio.muted = isMuted;
             if (onAudio) onAudio.muted = isMuted;
             if (offAudio) offAudio.muted = isMuted;
+            if (logoAudio) logoAudio.muted = isMuted;
 
-            const inter01 = document.getElementById('inter-01');
-            const inter02 = document.getElementById('inter-02');
-            if (inter01) inter01.muted = isMuted;
-            if (inter02) inter02.muted = isMuted;
-
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
             muteBtn.classList.toggle('unmuted', !isMuted);
         });
     }
@@ -55,65 +48,163 @@ document.addEventListener('DOMContentLoaded', () => {
             const flash = document.createElement('div');
             flash.className = 'screen-logo-flash';
             flash.innerHTML = `
-                <img src="assets/storygear.png" alt="StoryEngine Logo">
+                <div class="logo-container" style="display:flex; align-items:center; gap:32px; margin-bottom:16px;">
+                    <img src="assets/pm02-G.webp" alt="Project Logo" class="logo-first">
+                    <span style="color:#fff; font-size:1.5rem;">×</span>
+                    <img src="assets/storygear.png" alt="StoryEngine Logo" class="logo-second">
+                </div>
                 <div class="logo-title">STORYENGINE</div>
             `;
             tvScreen.appendChild(flash);
 
-            // Hold for 2s, then fade out
+            const logoAudio = document.getElementById('logo-audio');
+            if (logoAudio) {
+                logoAudio.muted = isMuted;
+                logoAudio.currentTime = 0;
+                logoAudio.volume = 1;
+                logoAudio.play().catch(e => console.error("Logo audio play failed:", e));
+            }
+
+            // Hold for 7.4s (total 8s reveal including fade), then fade out
+            const holdTimeMs = 7400;
+
             setTimeout(() => {
                 flash.classList.add('fade-out');
+
+                // Fade out audio with visual fade out
+                if (logoAudio && !logoAudio.paused) {
+                    const fadeSteps = 12;
+                    const fadeAmount = logoAudio.volume / fadeSteps;
+                    let currentStep = 0;
+                    const audioFadeInterval = setInterval(() => {
+                        if (currentStep < fadeSteps && logoAudio.volume > fadeAmount) {
+                            logoAudio.volume = Math.max(0, logoAudio.volume - fadeAmount);
+                            currentStep++;
+                        } else {
+                            logoAudio.pause();
+                            logoAudio.currentTime = 0;
+                            logoAudio.volume = 1;
+                            clearInterval(audioFadeInterval);
+                        }
+                    }, 50); // 50 * 12 = 600ms fade duration matching css opacity 0.6s
+                }
+
                 setTimeout(() => {
                     flash.remove();
                     resolve();
                 }, 600);
-            }, 2000);
+            }, holdTimeMs > 0 ? holdTimeMs : 2000); // Wait until 600ms before track ends to start visual fade
         });
     }
 
     // Power label element
     const powerLabel = document.getElementById('power-label');
     let isOn = false;
+    let isTransitioning = false;
 
-    // TV power button — triggers: screen on → video → black → logo → terminal
     if (tvButton) {
-        tvButton.addEventListener('click', () => {
+        tvButton.addEventListener('click', async () => {
+            if (isTransitioning) return; // Prevent spamming while mechanical trigger is processing
+
             if (!isOn) {
-                // Turn ON
+                // Physical Button: Pressed IN (Turning ON)
                 isOn = true;
                 tvButton.classList.add('active');
-                if (powerLabel) { powerLabel.textContent = 'ON'; powerLabel.classList.add('on'); }
-
-                if (bootVideo) {
-                    bootVideo.muted = true; // Use separate audio file
-                    bootVideo.style.display = 'block';
-                    bootVideo.currentTime = 0;
-                    bootVideo.play();
-
-                    const onAudio = document.getElementById('on-audio');
-                    if (onAudio) {
-                        onAudio.muted = isMuted;
-                        onAudio.currentTime = 0;
-                        onAudio.play().catch(e => console.error("On audio play failed:", e));
-                    }
-
-                    bootVideo.addEventListener('ended', async () => {
-                        bootVideo.classList.add('video-fade-out');
-                        await new Promise(r => setTimeout(r, 800));
-                        bootVideo.style.display = 'none';
-                        bootVideo.classList.remove('video-fade-out');
-
-                        await showLogoFlash();
-                        initEngine(true);
-                    }, { once: true });
-                } else {
-                    initEngine(true);
-                }
+                await startPowerOnSequence();
             } else {
-                // Turn OFF
-                shutdownEngine();
+                // Physical Button: Pressed OUT (Turning OFF)
+                isOn = false;
+                tvButton.classList.remove('active');
+                await shutdownEngine();
             }
         });
+    }
+
+    async function startPowerOnSequence() {
+        isTransitioning = true;
+
+        // Immediate visual blackout preparation
+        if (mainInterface) mainInterface.classList.add('hidden');
+        if (tvScreen) {
+            tvScreen.classList.remove('hidden');
+            const flash = tvScreen.querySelector('.screen-logo-flash');
+            if (flash) flash.remove();
+        }
+
+        if (bootVideo) {
+            bootVideo.muted = true;
+            bootVideo.style.display = 'block';
+            bootVideo.currentTime = 0;
+
+            try {
+                await bootVideo.play();
+            } catch (e) {
+                console.error("Boot video playback failed:", e);
+            }
+
+            const onAudio = document.getElementById('on-audio');
+            if (onAudio) {
+                onAudio.muted = isMuted;
+                onAudio.currentTime = 0;
+                onAudio.play().catch(e => console.error("On audio failed:", e));
+            }
+
+            // Wait for video to end or for user to toggle off
+            await new Promise(resolve => {
+                const checkState = setInterval(() => {
+                    if (!isOn) { // User turned it off midway
+                        clearInterval(checkState);
+                        bootVideo.pause();
+                        if (onAudio) { onAudio.pause(); onAudio.currentTime = 0; }
+                        resolve();
+                    }
+                }, 50);
+
+                bootVideo.onended = () => {
+                    clearInterval(checkState);
+                    resolve();
+                };
+            });
+
+            // If still ON, continue to fade and logo
+            if (isOn) {
+                bootVideo.classList.add('video-fade-out');
+                // Fade audio...
+                const onAudio = document.getElementById('on-audio');
+                if (onAudio && !onAudio.paused) {
+                    const fadeSteps = 16;
+                    const fadeAmount = onAudio.volume / fadeSteps;
+                    let currentStep = 0;
+                    const audioFadeInterval = setInterval(() => {
+                        if (currentStep < fadeSteps && onAudio.volume > fadeAmount) {
+                            onAudio.volume = Math.max(0, onAudio.volume - fadeAmount);
+                            currentStep++;
+                        } else {
+                            onAudio.pause();
+                            onAudio.currentTime = 0;
+                            onAudio.volume = 1;
+                            clearInterval(audioFadeInterval);
+                        }
+                    }, 50);
+                }
+
+                await new Promise(r => setTimeout(r, 800));
+                bootVideo.style.display = 'none';
+                bootVideo.classList.remove('video-fade-out');
+
+                if (isOn) {
+                    await showLogoFlash();
+                }
+
+                if (isOn) {
+                    initEngine(true);
+                }
+            }
+        } else {
+            initEngine(true);
+        }
+
+        isTransitioning = false;
     }
 
     // State
@@ -167,12 +258,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function initEngine(skipBoot = false) {
+    async function initEngine(skipBoot = false) {
         // Swap: hide screen, show terminal — frame stays
         if (tvScreen) tvScreen.classList.add('hidden');
         if (mainInterface) mainInterface.classList.remove('hidden');
 
         if (skipBoot) {
+            if (terminalOutput) terminalOutput.innerHTML = '';
+
+            // Neon loading effect
+            const loadingLine = document.createElement('div');
+            loadingLine.className = 'system-loading';
+            terminalOutput.appendChild(loadingLine);
+
+            const loadingText = "Loading system data...";
+            for (let i = 0; i < loadingText.length; i++) {
+                loadingLine.textContent += loadingText[i];
+                await new Promise(r => setTimeout(r, 30));
+            }
+            await new Promise(r => setTimeout(r, 400));
+            // Keep the loading line as a header
+
             loadLibrary();
         } else {
             if (terminalOutput) terminalOutput.innerHTML = '';
@@ -302,6 +408,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Easter egg: secret
         if (lower === 'secret') {
             await typeLineTerminal('Job 41:1: "Can you draw out Leviathan with a fishhook? Or press down his tongue with a cord?"', 20);
+            return;
+        }
+
+        // Easter egg: jaguar
+        if (lower === 'jaguar') {
+            await typeLineTerminal("[DATA REPORT: JAGUAR NOMENCLATURE]", 15);
+            await delay(300);
+            await typeLineTerminal("Observation: The earliest documented usage of the term “jaguar” originates from 16th-century Portuguese explorers in Brazil.", 15);
+            await delay(300);
+            await typeLineTerminal("Etymology: Derived from the Tupi-Guarani word “îagûara,” interpreted as “beast that kills with one leap.”", 15);
+            await delay(300);
+            await typeLineTerminal("Cultural Note: Indigenous populations exhibited avoidance behavior regarding vocalization of the term; verbalizing the name was believed to invoke the entity’s presence. Conclusion: the act of naming corresponded with immediate risk—“by the time the word was spoken, it was already too late.”", 15);
             return;
         }
 
@@ -610,7 +728,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (terminalInput) terminalInput.focus();
     }
 
-    function shutdownEngine() {
+    async function shutdownEngine() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
         // Hide terminal and story viewport immediately
         engineViewport.classList.add('hidden');
         mainInterface.classList.add('hidden');
@@ -620,18 +741,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show tv-screen so we can play the off video in it
         if (tvScreen) tvScreen.classList.remove('hidden');
 
-        // Reset boot video
+        // Reset boot video and its audio
         if (bootVideo) {
             bootVideo.pause();
             bootVideo.currentTime = 0;
             bootVideo.style.display = 'none';
             bootVideo.classList.remove('video-fade-out');
         }
+
+        const onAudio = document.getElementById('on-audio');
+        if (onAudio) {
+            onAudio.pause();
+            onAudio.currentTime = 0;
+        }
+
         // Remove any logo flash still on screen
         if (tvScreen) {
             const flash = tvScreen.querySelector('.screen-logo-flash');
             if (flash) flash.remove();
         }
+
         if (terminalOutput) terminalOutput.innerHTML = '';
         if (terminalInput) terminalInput.value = '';
 
@@ -639,30 +768,50 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shutdownVideo) {
             shutdownVideo.muted = true; // Video itself is always muted
             shutdownVideo.style.display = 'block';
-            // Start from the middle of the video instead of the beginning for a faster, punchier effect
-            shutdownVideo.currentTime = 2.0;
-            shutdownVideo.play().catch(e => console.error("Shutdown video play failed:", e));
+
+            // Sync sync video (4.92s) and audio (4.67s)
+            // Skip first 0.25s of video so they end at the same time
+            shutdownVideo.currentTime = 0.25;
+
+            try {
+                await shutdownVideo.play();
+            } catch (e) {
+                console.error("Shutdown video play failed:", e);
+            }
 
             const offAudio = document.getElementById('off-audio');
             if (offAudio) {
                 offAudio.muted = isMuted;
-                offAudio.currentTime = 2.0; // Play synced audio starting at 2s
+                offAudio.currentTime = 0; // Play from beginning of the crunchy section
                 offAudio.play().catch(e => console.error("Off audio play failed:", e));
             }
 
-            shutdownVideo.addEventListener('ended', () => {
+            await new Promise(resolve => {
+                const checkStateOff = setInterval(() => {
+                    if (isOn) { // Interrupted by turning ON midway
+                        clearInterval(checkStateOff);
+                        shutdownVideo.pause();
+                        if (offAudio) { offAudio.pause(); offAudio.currentTime = 0; }
+                        resolve();
+                    }
+                }, 50);
+
+                shutdownVideo.onended = () => {
+                    clearInterval(checkStateOff);
+                    resolve();
+                };
+            });
+
+            if (!isOn) {
                 shutdownVideo.style.display = 'none';
-                // Reset button to OFF state
-                isOn = false;
-                tvButton.classList.remove('active');
-                if (powerLabel) { powerLabel.textContent = 'OFF'; powerLabel.classList.remove('on'); }
-            }, { once: true });
+            }
         } else {
             // No shutdown video — reset immediately
             isOn = false;
             tvButton.classList.remove('active');
-            if (powerLabel) { powerLabel.textContent = 'OFF'; powerLabel.classList.remove('on'); }
         }
+
+        isTransitioning = false;
     }
 
     // --- ANIMATION ENGINE ---
@@ -744,23 +893,61 @@ document.addEventListener('DOMContentLoaded', () => {
     let radioInterferenceDuration = null;
     let isInterfering = false;
     let currentInterferenceAudio = null;
+    let activeFadeInterval = null;
+
+    let radioVolume = 1.0;
+
+    const volDownBtn = document.getElementById('radio-voldown');
+    const volUpBtn = document.getElementById('radio-volup');
 
     if (vintageRadio && radioAudio) {
-        // Sync initial mute state
-        radioAudio.muted = isMuted;
-        if (inter01) inter01.muted = isMuted;
-        if (inter02) inter02.muted = isMuted;
+        // Ensure starting volumes are correct and decoupled from TV mute
+        radioAudio.volume = radioVolume;
+        if (inter01) inter01.volume = radioVolume;
+        if (inter02) inter02.volume = radioVolume;
+
+        function updateVolume() {
+            if (!isInterfering) {
+                radioAudio.volume = radioVolume;
+            } else {
+                radioAudio.volume = Math.max(0.0, radioVolume * 0.1);
+                if (currentInterferenceAudio) {
+                    currentInterferenceAudio.volume = radioVolume;
+                }
+            }
+            if (inter01) inter01.volume = radioVolume;
+            if (inter02) inter02.volume = radioVolume;
+        }
+
+        if (volDownBtn) {
+            volDownBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // prevent turning radio off
+                radioVolume = Math.max(0.0, radioVolume - 0.1);
+                updateVolume();
+            });
+        }
+
+        if (volUpBtn) {
+            volUpBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // prevent turning radio off
+                radioVolume = Math.min(1.0, radioVolume + 0.1);
+                updateVolume();
+            });
+        }
 
         function clearInterferences() {
             if (radioInterferenceInterval) clearTimeout(radioInterferenceInterval);
             if (radioInterferenceDuration) clearTimeout(radioInterferenceDuration);
+            if (activeFadeInterval) clearInterval(activeFadeInterval);
             if (currentInterferenceAudio) {
                 currentInterferenceAudio.pause();
                 currentInterferenceAudio.currentTime = 0;
             }
+            if (inter01) { inter01.pause(); inter01.currentTime = 0; inter01.volume = radioVolume; }
+            if (inter02) { inter02.pause(); inter02.currentTime = 0; inter02.volume = radioVolume; }
             isInterfering = false;
             currentInterferenceAudio = null;
-            radioAudio.volume = 1.0;
+            radioAudio.volume = radioVolume;
         }
 
         function scheduleInterference() {
@@ -773,32 +960,72 @@ document.addEventListener('DOMContentLoaded', () => {
             if (radioAudio.paused && !isInterfering) return; // Radio is off globally
 
             isInterfering = true;
-            radioAudio.volume = 0.1; // Turn down main song instead of pausing
+            radioAudio.volume = Math.max(0.0, radioVolume * 0.1); // Turn down main song proportionally
 
             // Randomly choose track 1 or 2
             const trackToPlay = Math.random() > 0.5 ? inter01 : inter02;
             currentInterferenceAudio = trackToPlay;
 
             if (currentInterferenceAudio) {
-                currentInterferenceAudio.currentTime = 0;
+                currentInterferenceAudio.volume = radioVolume;
+
+                // --- RANDOMIZED INTERFERENCE START POSITION ---
+                // We pick a random starting position within the audio track.
+                // This makes the interference feel organic and unpredictable, like tuning in mid-broadcast.
+                if (currentInterferenceAudio.duration && !isNaN(currentInterferenceAudio.duration)) {
+                    // Give at least 5 seconds buffer so we don't start right at the exact end of the track
+                    const maxStartTime = Math.max(0, currentInterferenceAudio.duration - 5);
+                    currentInterferenceAudio.currentTime = Math.random() * maxStartTime;
+                } else {
+                    // Fallback to start if track metadata hasn't loaded fully yet
+                    currentInterferenceAudio.currentTime = 0;
+                }
+
                 currentInterferenceAudio.play().catch(e => console.error("Interference play failed", e));
             }
 
             // Play for random duration between 3s and 13s
             const duration = Math.random() * 10000 + 3000;
             radioInterferenceDuration = setTimeout(() => {
-                if (currentInterferenceAudio) {
-                    currentInterferenceAudio.pause();
-                }
                 isInterfering = false;
-                currentInterferenceAudio = null;
-                // Resume main song
+
+                // Resume main song immediately while overlapping the fade out
                 if (vintageRadio.classList.contains('playing')) {
-                    radioAudio.volume = 1.0; // Restore volume
+                    radioAudio.volume = radioVolume; // Restore volume
                     scheduleInterference();
+                }
+
+                if (currentInterferenceAudio) {
+                    const audioToFade = currentInterferenceAudio;
+                    currentInterferenceAudio = null;
+
+                    if (activeFadeInterval) clearInterval(activeFadeInterval);
+                    const fadeSteps = 20;
+                    const fadeAmount = audioToFade.volume / fadeSteps;
+
+                    activeFadeInterval = setInterval(() => {
+                        if (audioToFade.volume > fadeAmount) {
+                            audioToFade.volume = Math.max(0, audioToFade.volume - fadeAmount);
+                        } else {
+                            clearInterval(activeFadeInterval);
+                            activeFadeInterval = null;
+                            audioToFade.pause();
+                            audioToFade.currentTime = 0;
+                            audioToFade.volume = radioVolume; // Reset volume for next time
+                        }
+                    }, 50); // 1-second fade out
                 }
             }, duration);
         }
+
+        const radioTracks = ['assets/radio song.mp3', 'assets/radiosong02.mp3', 'assets/radiosong03.mp3'];
+        let currentTrackIndex = 0;
+
+        radioAudio.addEventListener('ended', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % radioTracks.length;
+            radioAudio.src = radioTracks[currentTrackIndex];
+            radioAudio.play().catch(e => console.error("Radio play next track failed:", e));
+        });
 
         vintageRadio.addEventListener('click', () => {
             if (!vintageRadio.classList.contains('playing')) {

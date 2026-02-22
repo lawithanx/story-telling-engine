@@ -24,6 +24,10 @@
         <div class="radio-dial"></div>
         <div class="radio-antenna"></div>
         <span class="radio-label">FM/AM</span>
+        <div class="radio-volume-controls">
+            <button id="radio-voldown" class="radio-vol-btn" title="Volume Down">-</button>
+            <button id="radio-volup" class="radio-vol-btn" title="Volume Up">+</button>
+        </div>
     </div>
 
     <div class="engine-frame">
@@ -52,13 +56,21 @@
         </header>
         <!-- Controls row — below screen like a real TV -->
         <div class="frame-controls">
-            <div class="power-control">
-                <button id="tvbutton" class="tv-power-btn" aria-label="Power toggle">⏻</button>
-                <span id="power-label" class="power-label">OFF</span>
+            <div class="tv-control-group power-control">
+                <span class="tv-control-label">MAIN PWR</span>
+                <div class="power-btn-container" style="display:flex; align-items:center; gap:8px;">
+                    <button id="tvbutton" class="tv-power-btn" aria-label="Power toggle">•</button>
+                </div>
             </div>
             <div class="frame-controls-right">
-                <button id="manual-btn" class="tv-manual-btn" title="Manual / Help">📖</button>
-                <button id="mute-btn" class="tv-mute-btn" title="Toggle sound">🔇</button>
+                <div class="tv-control-group">
+                    <span class="tv-control-label">MANUEL</span>
+                    <button id="manual-btn" class="tv-manual-btn" title="Manual / Help">•</button>
+                </div>
+                <div class="tv-control-group">
+                    <span class="tv-control-label">SPEAKER</span>
+                    <button id="mute-btn" class="tv-mute-btn" title="Toggle sound">•</button>
+                </div>
             </div>
         </div>
 
@@ -82,30 +94,34 @@
     <!-- Manual popup — appears on screen like a map -->
     <div id="manual-overlay" class="manual-overlay hidden">
         <div class="manual-content">
-            <h2>📟 STORYENGINE v2.5 — MANUAL</h2>
-            <p>Hi, this is the new 2.5 Story Engine.</p>
-            <p>Please read the instructions below. If you have any questions, contact:<br>
-                <strong>lawithan@tech-jcorp.org</strong>
-            </p>
+            <h2>OPERATOR'S MANUAL – STORY ENGINE v1.3</h2>
+            <p>Welcome to the <strong>STORY ENGINE</strong>, the newest marvel of narrative computational synthesis
+                forged exclusively by Tech-JCorp. Engineered for the modern age, this apparatus delivers high-fidelity
+                textual transmission directly to your viewing screen.</p>
             <hr>
-            <h3>TERMINAL COMMANDS:</h3>
+            <h3>TERMINAL OPERATION DIRECTRY:</h3>
             <ul>
-                <li><code>exit</code> — Turns off the engine</li>
-                <li><code>clear</code> — Clears the terminal screen</li>
-                <li><code>back</code> — Go back to previous menu</li>
-                <li><code>list</code> — List available archives</li>
-                <li>Anything else? Gets echoed back. Try different text to see if you can find an easter egg!
-                </li>
+                <li><code>list</code> — Display the master catalog of available chronicles.</li>
+                <li><code>[Number]</code> — Input the corresponding numeric code to commence transmission.</li>
+                <li><code>back</code> — Halt current stream and return to the main directory.</li>
+                <li><code>clear</code> — Wipe the cathode-ray tube of preceding outputs.</li>
+                <li><code>exit</code> — Terminate connection and prepare for hardware shutdown.</li>
             </ul>
             <hr>
-            <p class="manual-footer">Select an author by number, then select a story.<br>Enjoy the experience.
-            </p>
-            <button id="close-manual" class="manual-close-btn">✕ CLOSE</button>
+            <h3>MAINTENANCE & SAFETY:</h3>
+            <ul>
+                <li>Allow appropriate warm-up time before initial query bridging.</li>
+                <li>Unknown dialect inputs will result in a localized sonic echo. Enter commands precisely.</li>
+                <li>Sudden power termination will not damage the core module but is ill-advised during active playback.
+                </li>
+            </ul>
+            <p class="manual-footer">Tech-JCorp thanks you for your purchase. Building the future, today.</p>
+            <button id="close-manual" class="manual-close-btn">Put away Manuel</button>
         </div>
     </div>
 
     <!-- Hidden audio element for the vintage radio -->
-    <audio id="radio-audio" loop preload="auto">
+    <audio id="radio-audio" preload="auto">
         <source src="assets/radio song.mp3" type="audio/mpeg">
     </audio>
 
@@ -113,6 +129,10 @@
     <audio id="on-audio" preload="auto">
         <source src="assets/ontv.mp3" type="audio/mpeg">
     </audio>
+    <audio id="logo-audio" preload="auto">
+        <source src="assets/The Drums That Stir the Spirit - Ancient Energy Reborn.mp3" type="audio/mpeg">
+    </audio>
+
     <audio id="off-audio" preload="auto">
         <source src="assets/offtv.mp3" type="audio/mpeg">
     </audio>
