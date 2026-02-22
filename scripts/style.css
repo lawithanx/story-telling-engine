@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Prestige Elite';
-  src: url('../assets/PrestigeEliteStd-Bd.otf');
+    font-family: 'Prestige Elite';
+    src: url('../assets/PrestigeEliteStd-Bd.otf');
 }
 
 
@@ -71,7 +71,7 @@ body {
 
 /* ═══ VINTAGE CRT TV FRAME ═══ */
 .engine-frame {
-    background: url('../assets/rusty_computer_skin.png') center center / cover no-repeat, #333;
+    background: url('../assets/metalpanel.jpg') center center / cover no-repeat, #8B7355;
     border: 8px solid transparent;
     border-image: url('../assets/RUSTY.jpg') 30 stretch;
     border-radius: 16px;
