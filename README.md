@@ -1,27 +1,39 @@
-# TECH-JCORP STORY ENGINE v1.3
+# STORY ENGINE | Strategic Narrative Computation Unit (Model SE-1347)
 
-The Story Engine is a high-fidelity narrative computational synthesis tool, engineered for immersive, terminal-style interactive storytelling. 
+**CONFIDENTIAL – TECH-JCORP INTERNAL DOCUMENTATION**
 
-It functions as a web-based, zero-dependency engine combining CRT-style scanline aesthetics, an interactive command-line interface, and dynamically injected JSON narrative data to create a lore-heavy, immersive experience.
+The **STORY ENGINE** is a high-fidelity narrative computational synthesis tool, developed by Tech-JCorp for the tactical reconstruction of decoupled data chronicles. This web-based relic combines cathode-ray tube (CRT) scanline aesthetics, an interactive command-line interface, and dynamically injected JSON narrative clusters to provide a fully immersive, zero-dependency operator experience.
+
+## 🛠️ Operational Infrastructure (Tech Stack)
+- **LOGIC KERNEL:** Vanilla JavaScript (ES6+). Optimized for zero-dependency execution in low-memory environments.
+- **VISUAL ARRAY:** CSS3 hardware-accelerated filters, linear gradients, and responsive "Bento-box" tactical framing.
+- **DATA BRIDGE:** Asynchronous JSON data streams (Fetch API v2.0) for seamless chronicle excavation.
+- **MEDIA PROTOCOLS:** Optimized WEBP/MP4 visual encoders and high-fidelity synchronized MP3 audio streams.
+- **TYPOGRAPHY:** Custom-embedded 'Prestige Elite' typeface for authentic 1952 field documentary fidelity.
+
+## ⚙️ Core System Functionality
+- **TERMINAL EMULATOR:** A fully functional command-line interface for traversing narrative archives and executing classified system commands.
+- **NARRATIVE RECONSTRUCTION:** Dynamic logic handles the injection of `STORY.JSON` chronicles, rendered with a real-time hardware typewriter-effect display.
+- **TACTILE CONTROLS:** Integrated physical-style knobs and buttons for power scaling, frequency modulation (Mute), and manual navigation.
+- **AMBIENT SIMULATION:** Vintage radio attachment with randomly seeded interference patterns and mid-broadcast frequency tuning.
+- **ANOMALOUS PHENOMENA:** Internal logic exercises that bridge narrative gaps via operator-input logical verification.
+- **MOBILE DEPLOYMENT:** Full responsive calibration with specific UI overrides for radio positioning on hand-held units.
+
+## 📜 Historical Context: The Recovered Artifact
+The Story Engine is presented as a **1950s computational artifact** retrieved from a forgotten Tech-JCorp research bunker after the 1948 expedition.
+
+The unit's interface blends tactical military hardware with early experimental computational design. The aesthetic features weathered rust skins, CRT flicker animations, and analog-style transition sequences. Every document within the engine is processed as a declassified or reconstructed data stream, inviting the operator to uncover historical narratives buried within decoupled data clusters.
+
+*OPERATOR NOTICE: Processing capacity is augmented by a Temple Gem recovered from the Jaguar site. Report all paranormal resonances to central command.*
 
 ---
 
-## 🛠️ Architecture Audit & Future Roadmap
+### 🛡️ Pre-Session Deployment Checklist
+- [x] Boot sequence calibration finalized.
+- [x] Radio frequency interference (RFI) synchronization complete.
+- [x] CRT scanline integrity verified for prolonged operation.
+- [x] Terminal directory indexed for all authorized chronicles.
+- [x] Security protocols and `robots.txt` hardening enacted.
+- [x] Overgrown foliage concealment protocol implemented.
 
-As the engine scales to include more rich media (audio tracks, interference clips, webp icons, and h264 video sequences), maintaining high performance requires upgrading the asset management tier.
-
-### 1. Audio Management
-Currently, assets like `ontv.mp3`, `offtv.mp3`, `radio song.mp3`, and interference clips are loaded dynamically into the DOM via `<audio>` elements.
-* **Proposed Enhancement:** Integrate an audio manager such as **Howler.js**, or compile all short UI sounds (clicks, mechanical buzzes) into a single **Audio Sprite**. This prevents memory bloat by offloading the concurrent playback caching from the raw DOM.
-
-### 2. Video Streaming & Buffering
-The engine utilizes raw `.mp4` video files for boot sequences. While local bandwidth is sufficient, live server deployment risks "black screen" buffering latency.
-* **Proposed Enhancement:** Transition large video sequences to **HLS (HTTP Live Streaming)** using a library like `video.js` or `hls.js`. HLS breaks the `.mp4` into two-second `.ts` packets, allowing the user to begin immediate playback regardless of internet speeds and preventing the UI from stalling.
-
-### 3. Asynchronous Asset Pre-Fetching
-HD textures like `metalpanel.jpg`, `manuel.jpg`, and `RUSTY.jpg` require preemptive fetching.
-* **Proposed Enhancement:** Develop a centralized **Asset Preloader State** class in `engine.js` that halts the rendering of `main-interface` until a sequence of JavaScript `Promises` verify the textures are safely cached in browser memory, preventing white-screen flashes.
-
-### 4. Progressive Web App (PWA) Caching
-The Story Engine mimics a standalone machine; it shouldn't require network reloading between user visits.
-* **Proposed Enhancement:** Write a `serviceWorker.js` to aggressively cache `.jpg` wrappers, core scripts, and `.css` upon the user's first visit. This allows subsequent boots to load from local cache instantly, enabling near-native application speeds.
+*Tech-JCorp thanks you for your cooperation. Building the future, today.*

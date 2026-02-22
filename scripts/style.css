@@ -12,22 +12,28 @@
     --font-body: 'Prestige Elite', monospace;
 }
 
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Lock viewport to prevent both x and y scrolling */
+}
+
 /* Ensure full‑width on mobile */
 @media (max-width: 768px) {
     body {
-        padding: 0 10px;
+        padding: 0;
     }
 }
 
 body {
-    background: linear-gradient(rgba(15, 15, 15, 0.6), rgba(15, 15, 15, 0.6)), url('../assets/jungle.png') no-repeat center center fixed;
+    background: linear-gradient(rgba(18, 28, 18, 0.35), rgba(18, 28, 18, 0.35)), url('../assets/tex_jungle_bg.png') no-repeat center center fixed;
     background-size: cover;
     color: var(--text-color);
-    margin: 0;
-    padding: 0;
     font-family: var(--font-body);
     line-height: 1.8;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -71,9 +77,9 @@ body {
 
 /* ═══ VINTAGE CRT TV FRAME ═══ */
 .engine-frame {
-    background: url('../assets/metalpanel.jpg') center center / cover no-repeat, #8B7355;
+    background: url('../assets/tex_metal_panel.jpg') center center / cover no-repeat, #8B7355;
     border: 8px solid transparent;
-    border-image: url('../assets/RUSTY.jpg') 30 stretch;
+    border-image: url('../assets/tex_rusty_border.jpg') 30 stretch;
     border-radius: 16px;
     padding: 24px 24px 16px;
     box-sizing: border-box;
@@ -90,10 +96,49 @@ body {
     align-items: center;
     box-shadow:
         0 25px 50px -12px rgba(0, 0, 0, 0.9),
-        0 40px 80px rgba(0, 0, 0, 0.7),
+        0 40px 80px rgba(0, 0, 0, 0.9),
         inset 0 2px 2px rgba(255, 255, 255, 0.15);
     /* Subtle highlight on top edge */
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.85));
+}
+
+/* Mainframe Branding Above Screen */
+.mainframe-branding {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.branding-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 14px;
+    background: rgba(240, 230, 210, 0.2);
+    /* Slight off-white transparent bg */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    box-shadow:
+        2px 2px 8px rgba(0, 0, 0, 0.8),
+        inset 0 0 10px rgba(255, 255, 255, 0.05);
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+}
+
+.mainframe-logo {
+    width: 36px;
+    height: auto;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.9)) brightness(1.2);
+}
+
+.mainframe-title {
+    font-family: var(--font-header);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f5f5f5;
+    /* Off-white */
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);
 }
 
 /* CRT screen bezel */
@@ -111,6 +156,8 @@ body {
     overflow: hidden;
     border-radius: 12px;
     border: 4px solid #2a2a2a;
+    box-sizing: border-box;
+    /* ensure border does not overflow container */
     box-shadow:
         inset 0 0 50px rgba(0, 0, 0, 1),
         inset 0 0 100px rgba(0, 0, 0, 0.8),
@@ -207,15 +254,15 @@ body {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    border: 3px solid #6b8a6b;
-    background: radial-gradient(circle at 35% 35%, #a5d3a5, #7ebc7e 40%, #5d9e5d);
-    color: #0f3d0f;
+    border: 3px solid #3b4d3b;
+    background: radial-gradient(circle at 35% 35%, #5c7a5c, #4c664c 40%, #3b4d3b);
+    color: #0d260d;
     font-size: 1.5rem;
     cursor: pointer;
     box-shadow:
         3px 4px 8px rgba(0, 0, 0, 0.6),
-        -1px -1px 3px rgba(255, 255, 255, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4);
+        -1px -1px 3px rgba(255, 255, 255, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
     transition: all 0.15s ease;
     display: flex;
     align-items: center;
@@ -225,7 +272,7 @@ body {
 }
 
 .tv-mute-btn:hover {
-    background: radial-gradient(circle at 35% 35%, #bdf2bd, #8dcd8d 40%, #6dae6d);
+    background: radial-gradient(circle at 35% 35%, #6b8a6b, #5c7a5c 40%, #4c664c);
 }
 
 /* Pressed in — ON (White buttons) */
@@ -242,13 +289,13 @@ body {
 
 /* Pressed in — ON (Green Speaker Button) */
 .tv-mute-btn.unmuted {
-    background: radial-gradient(circle at 50% 50%, #7ebc7e, #5d9e5d 60%, #3e7a3e);
-    color: #0f3d0f;
-    border-color: #4c824c;
+    background: radial-gradient(circle at 50% 50%, #4c664c, #3b4d3b 60%, #2a382a);
+    color: #0d260d;
+    border-color: #2a382a;
     box-shadow:
-        inset 4px 4px 8px rgba(0, 0, 0, 0.6),
-        inset -2px -2px 6px rgba(255, 255, 255, 0.2),
-        0 1px 2px rgba(255, 255, 255, 0.2);
+        inset 4px 4px 8px rgba(0, 0, 0, 0.7),
+        inset -2px -2px 6px rgba(255, 255, 255, 0.1),
+        0 1px 2px rgba(255, 255, 255, 0.1);
     transform: scale(0.95) translateY(2px);
 }
 
@@ -272,8 +319,12 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: url('../assets/vintage_paper.png') repeat-y center;
-    background-size: 100% auto;
+    background-color: #e6dcc8;
+    /* Solid vintage fallback color */
+    background-image: url('../assets/tex_vintage_paper.png');
+    background-repeat: repeat;
+    background-position: center;
+    background-size: cover;
     color: #39FF14;
     z-index: 9999;
     display: flex;
@@ -296,6 +347,22 @@ body {
     background: transparent;
     border: none;
     box-shadow: none;
+    position: relative;
+    /* Essential for top-right nav */
+}
+
+.manual-top-nav-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+/* Specific manual nav button at top right */
+.manual-top-nav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
 .manual-content h2 {
@@ -373,8 +440,6 @@ body {
 
 .manual-close-btn {
     display: block;
-    margin: 16px 0 0 auto;
-    /* Align to the right */
     padding: 8px 16px;
     background: transparent;
     border: 1.5px solid #000;
@@ -383,14 +448,61 @@ body {
     font-size: 0.9rem;
     font-weight: 900;
     cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
+    transition: background 0.2s;
 }
 
 .manual-close-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-    /* Very subtle hover */
-    transform: translateX(-2px);
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Manual Pagination */
+.manual-footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    border-top: 2px solid #000;
+    padding-top: 16px;
+}
+
+.manual-pagination {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#page-indicator {
+    font-family: var(--font-body);
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: #444;
+    min-width: 80px;
+    text-align: center;
+}
+
+.manual-nav-btn {
+    padding: 4px 10px;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 900;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.manual-nav-btn:hover {
+    background: #333;
+}
+
+.manual-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.manual-page.hidden {
+    display: none;
 }
 
 .manual-footer {
@@ -689,19 +801,11 @@ h6,
     overflow: hidden;
     border-radius: 12px;
     border: 4px solid #2a2a2a;
-    box-shadow:
-        inset 0 0 40px rgba(0, 0, 0, 0.9),
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9),
         inset 0 0 8px rgba(57, 255, 20, 0.03),
         0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
-#main-interface #main-title {
-    color: #39FF14;
-    font-size: 1rem;
-    padding: 8px 15px 0;
-    margin: 0;
-    flex-shrink: 0;
-}
 
 #terminal-interface {
     background: #000;
@@ -724,6 +828,26 @@ h6,
 #terminal-interface::-webkit-scrollbar {
     display: none;
     /* Chrome/Safari */
+}
+
+/* Easter egg gemstone class */
+.rainbow-text {
+    animation: rainbow 3s linear infinite;
+    color: transparent;
+    background-image: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+@keyframes rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1129,8 +1253,45 @@ h6,
     justify-content: center;
     align-items: center;
     z-index: 5;
-    animation: logoFlashIn 0.4s ease-out forwards;
+    animation: tv-logo-reveal 2s steps(4) forwards;
     transition: opacity 0.6s ease;
+}
+
+@keyframes tv-logo-reveal {
+    0% {
+        opacity: 0;
+        transform: scale(1.5, 0.05);
+    }
+
+    5% {
+        opacity: 1;
+        transform: scale(1.1, 1.1);
+    }
+
+    10% {
+        opacity: 0.3;
+        transform: scale(0.9, 0.9);
+    }
+
+    15% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    85% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    90% {
+        opacity: 0.5;
+        transform: scale(1.2, 0.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(2, 0);
+    }
 }
 
 .screen-logo-flash.fade-out {
@@ -1278,9 +1439,9 @@ h6,
     left: 20px;
     width: 70px;
     height: 90px;
-    background: url('../assets/rusty_radio_skin.png') center center / cover no-repeat, #4a2e15;
+    background: url('../assets/tex_radio_skin.png') center center / cover no-repeat, #4a2e15;
     border: 4px solid transparent;
-    border-image: url('../assets/RUSTY.jpg') 30 stretch;
+    border-image: url('../assets/tex_rusty_border.jpg') 30 stretch;
     border-radius: 12px 12px 4px 4px;
     box-shadow:
         0 -5px 15px rgba(0, 0, 0, 0.6),
@@ -1295,6 +1456,31 @@ h6,
     transition: transform 0.1s ease;
     transform-origin: bottom center;
 }
+
+/* Mobile Adjustments for Radio Attachment */
+@media (max-width: 768px) {
+    body .vintage-radio-attachment {
+        left: auto !important;
+        bottom: auto !important;
+        right: 15px !important;
+        top: 25px !important;
+        transform: scale(0.75) !important;
+        transform-origin: top right !important;
+        box-shadow:
+            -5px 5px 15px rgba(0, 0, 0, 0.6),
+            inset 1px 1px 3px rgba(255, 255, 255, 0.2),
+            0 8px 10px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    body .radio-antenna {
+        top: -30px !important;
+        height: 40px !important;
+        left: auto !important;
+        right: 10px !important;
+        transform: rotate(25deg) !important;
+    }
+}
+
 
 .vintage-radio-attachment:hover {
     filter: brightness(1.1);
@@ -1427,4 +1613,77 @@ h6,
 
 .radio-vol-btn:active {
     transform: scale(0.9);
+}
+
+/* ─── FOILAGE OVERLAY (Session Based) ─── */
+.foilage-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    /* Above everything */
+    background: #000;
+    /* Fallback */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: opacity 1.5s ease;
+}
+
+.foilage-img {
+    position: absolute;
+    width: 120%;
+    /* Slight overflow to prevent edges */
+    height: 120%;
+    object-fit: cover;
+    filter: brightness(0.4) saturate(1.2) contrast(1.1);
+    transition: transform 1.5s ease-out, filter 1.5s ease;
+}
+
+.foilage-hint {
+    position: relative;
+    z-index: 10;
+    font-family: var(--font-header);
+    color: #e0d0b0;
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 0, 0, 0.8);
+    opacity: 0.8;
+    animation: pulse-hint 3s infinite ease-in-out;
+}
+
+@keyframes pulse-hint {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: scale(0.98);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.foilage-overlay.dissolve {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.foilage-overlay.dissolve .foilage-img {
+    transform: scale(1.1) rotate(2deg);
+    filter: brightness(0);
+}
+
+/* Responsive adjustments for foilage */
+@media (max-width: 768px) {
+    .foilage-hint {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
 }

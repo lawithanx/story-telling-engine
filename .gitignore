@@ -19,3 +19,8 @@ npm-debug.log*
 # Env (if added later)
 .env
 .env.local
+
+# Secrets and scripts
+eastereggs.txt
+update_txt.py
+*.txt

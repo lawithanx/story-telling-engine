@@ -4,14 +4,14 @@
             "Title": "The Ghost in the Machine",
             "Author": "LAWITHANX",
             "Version": "2.0",
-            "CoverImage": "assets/ghost_in_machine_cover_1767802172650.png"
+            "CoverImage": "assets/story_cover_ghost.png"
         },
         "Timeline": [
             {
                 "year": "1895-1901",
                 "region": "Italy to Canada",
                 "Title": "The Wireless Pulse",
-                "Image": "assets/marconi_wireless.png",
+                "Image": "assets/story_marconi.png",
                 "Description": "Guglielmo Marconi stood on the cliffs of Newfoundland, waiting for a 'tick' from across the ocean. By capturing the first Transatlantic pulse from England to Canada, he proved that information could exist as a ghost in the air—liberated from the wire.",
                 "Connection": "The transition from physical medium to atmospheric signal."
             },
@@ -40,26 +40,27 @@
                 "year": "1928-1950",
                 "region": "Germany to US",
                 "Title": "Magnetic Memory",
-                "Description": "Fritz Pfleumer trapped the signal in magnetic tape (1928). Developed by AEG (1935) and refined during the war, this technology was recovered by 'the Allies' (John T. Mullin) and brought to the USA. By 1950, IBM developed it for commercial use, allowing the machine to remember its state even after power was severed."
+                "Image": "assets/story_binary_tape.jpg",
+                "Description": "Fritz Pfleumer successfully trapped the invisible signal within magnetic tape (1928). Perfected by AEG (1935) and heavily refined under the shadow of war, this technology was later recovered by Allied forces (via John T. Mullin) and brought to the USA. By 1950, IBM adapted it for commercial data, finally allowing the machine to retain its memory and state even after its life force (power) was severed."
             },
             {
                 "year": "1944",
                 "region": "UK (Bletchley Park)",
                 "Title": "The Electronic Giant (Colossus)",
-                "Description": "Tommy Flowers built the Colossus to break the cipher of the Enigma Machine and Lorenz ciphers. It was the first time a machine was built specifically to 'think' faster than a human cipher.",
-                "Connection": "Logic overcoming chaos."
+                "Description": "Tommy Flowers engineered the Colossus to break the impossible Lorenz ciphers used by the German High Command. It marked the first time a machine was specifically birthed to 'think' and deduce faster than a human cryptanalyst.",
+                "Connection": "Logic overcoming the chaos of war."
             },
             {
                 "year": "1945",
                 "region": "US",
                 "Title": "ENIAC",
-                "Description": "J. Presper Eckert and John Mauchly created the ENIAC to calculate artillery trajectories, marking the dawn of general-purpose electronic computing."
+                "Description": "J. Presper Eckert and John Mauchly birthed the ENIAC to calculate complex artillery trajectories, marking the fiery dawn of general-purpose, programmable electronic computing."
             },
             {
                 "year": "1940-1947",
                 "region": "US",
                 "Title": "Assembly Language",
-                "Description": "Kathleen Booth created the first Assembly language to make coding easier, bridging the gap between binary machine code and human thought."
+                "Description": "Kathleen Booth created the first Assembly language, acting as a great translator. It allowed humans to instruct machines using comprehensible mnemonics, permanently bridging the gap between raw binary machine code and human thought."
             },
             {
                 "year": "1940-1951",
@@ -80,6 +81,15 @@
                 "History": "The ability to trap a signal in magnetic tape allowed the machine to possess a memory that survived the severing of its life force (power).",
                 "Paradigm": "Imperative Control - We command every step (C, Python). 'total = 0; for i in range(1,6): total += i' - we embody the logic."
             }
-        }
+        },
+        "Components": [
+            {
+                "name": "game-cipher",
+                "props": {
+                    "title": "Interactive Paradigm: Decrypt the Shadows",
+                    "description": "To physically grasp the concepts of encryption from Bletchley Park and Colossus, a 'Cipher Minigame' could be placed here. You are given an encrypted message and a set of 3 'rotors' (like the Enigma). You must rotate them to find the correct alignment that decrypts an ancient password. Using that password within the main terminal will unlock a hidden data artifact."
+                }
+            }
+        ]
     }
 }

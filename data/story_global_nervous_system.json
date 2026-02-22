@@ -4,7 +4,7 @@
             "Title": "The Global Nervous System",
             "Author": "LAWITHANX",
             "Version": "2.0",
-            "CoverImage": "assets/global_nervous_system_cover_1767802199656.png"
+            "CoverImage": "assets/story_cover_nervous.png"
         },
         "Timeline": [
             {
@@ -78,6 +78,15 @@
                     "User (Shell/GUI/Server)"
                 ]
             }
-        }
+        },
+        "Components": [
+            {
+                "name": "game-routing",
+                "props": {
+                    "title": "Interactive Paradigm: Packet Switch Routing",
+                    "description": "To embody the spirit of ARPANET and the IP protocols, a 'Packet Routing Node' minigame could be placed here. You are tasked with delivering an encrypted data packet from one end of a compromised network map to the other. You have to trace pathways between active nodes, avoiding severed connections and traffic bottlenecks, to successfully deliver the 'Life Force' protocol across the digital synapses before the timer runs out."
+                }
+            }
+        ]
     }
 }

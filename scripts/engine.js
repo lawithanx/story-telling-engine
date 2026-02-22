@@ -41,6 +41,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ─── FOILAGE OVERLAY (Session-Based) ───
+    const foilageOverlay = document.getElementById('foilage-overlay');
+    const rustlingAudio = document.getElementById('rustling-audio');
+
+    if (foilageOverlay) {
+        // Check if foilage has already been cleared in this session
+        const isFoilageCleared = sessionStorage.getItem('foilage_cleared') === 'true';
+
+        if (!isFoilageCleared) {
+            foilageOverlay.classList.remove('hidden');
+            foilageOverlay.addEventListener('click', () => {
+                // Play rustling sound
+                if (rustlingAudio) {
+                    rustlingAudio.muted = isMuted;
+                    rustlingAudio.currentTime = 0;
+                    rustlingAudio.play().catch(e => console.log("Rustling playback blocked", e));
+                }
+
+                // Start dissolution animation
+                foilageOverlay.classList.add('dissolve');
+                sessionStorage.setItem('foilage_cleared', 'true');
+
+                // Clean up DOM after transition
+                setTimeout(() => {
+                    foilageOverlay.remove();
+                }, 1500);
+            });
+        } else {
+            foilageOverlay.remove(); // Already cleared, don't even keep it in DOM
+        }
+    }
+
     // Logo flash — plays inside the tv-screen div
     function showLogoFlash() {
         return new Promise((resolve) => {
@@ -48,20 +80,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const flash = document.createElement('div');
             flash.className = 'screen-logo-flash';
             flash.innerHTML = `
-                <div class="logo-container" style="display:flex; align-items:center; gap:32px; margin-bottom:16px;">
-                    <img src="assets/pm02-G.webp" alt="Project Logo" class="logo-first">
-                    <span style="color:#fff; font-size:1.5rem;">×</span>
-                    <img src="assets/storygear.png" alt="StoryEngine Logo" class="logo-second">
+                <div class="branding-label">
+                    <img src="assets/img_logo_gear.png" alt="StoryEngine Logo" class="mainframe-logo">
+                    <span class="mainframe-title">STORYENGINE</span>
                 </div>
-                <div class="logo-title">STORYENGINE</div>
             `;
             tvScreen.appendChild(flash);
 
+            // Play drum sound for logo reveal
             const logoAudio = document.getElementById('logo-audio');
             if (logoAudio) {
                 logoAudio.muted = isMuted;
                 logoAudio.currentTime = 0;
-                logoAudio.volume = 1;
+                logoAudio.volume = 0.8;
                 logoAudio.play().catch(e => console.error("Logo audio play failed:", e));
             }
 
@@ -101,18 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const powerLabel = document.getElementById('power-label');
     let isOn = false;
     let isTransitioning = false;
+    let isShuttingDown = false;
 
     if (tvButton) {
         tvButton.addEventListener('click', async () => {
-            if (isTransitioning) return; // Prevent spamming while mechanical trigger is processing
-
             if (!isOn) {
+                if (isTransitioning) return; // Prevent spamming while turning off
                 // Physical Button: Pressed IN (Turning ON)
                 isOn = true;
                 tvButton.classList.add('active');
                 await startPowerOnSequence();
             } else {
-                // Physical Button: Pressed OUT (Turning OFF)
+                // Physical Button: Pressed OUT (Turning OFF) - allow instantly
                 isOn = false;
                 tvButton.classList.remove('active');
                 await shutdownEngine();
@@ -384,6 +415,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (lower === 'alien') {
+            printToTerminal("DECRYPTING ALIEN SIGNAL...");
+            setTimeout(() => {
+                printToTerminal("SIGNAL IDENTIFIED: [GEMSTONE]");
+            }, 800);
+            return;
+        }
+
         if (lower === 'clear') {
             if (terminalOutput) terminalOutput.innerHTML = '';
             return;
@@ -402,6 +441,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (lower === 'list' || lower === 'ls') {
             listStories();
+            return;
+        }
+
+        // Easter egg: whoiam
+        if (lower === 'whoiam') {
+            await delay(500);
+            await typeLineTerminal("You examine the face of sky and earth, but the one who is before you, you have not recognized, and you do not know how to test this opportunity.", 15);
+            return;
+        }
+
+        if (lower === 'alien') {
+            printToTerminal("DECRYPTING ALIEN SIGNAL...");
+            setTimeout(() => {
+                printToTerminal("SIGNAL IDENTIFIED: [GEMSTONE]");
+            }, 800);
+            return;
+        }
+
+        // Easter egg: gemstone
+        if (lower === 'gemstone') {
+            await typeLineTerminal("synchronising paranormal frequency...", 20);
+            await delay(500);
+            await typeLineTerminal("gemstone phase2 activated", 20);
+            terminalOutput.classList.add('rainbow-text');
+            return;
+        }
+
+        // Easter egg: wolfgoldenclaw
+        if (lower === 'wolfgoldenclaw') {
+            const lyrics = [
+                "I'm not afraid to fight and sacrifice everyday and night",
+                "There's space of time, but outline wouldn't break my strength",
+                "It's our secret the victory is waiting",
+                "With you by my side",
+                "My heart's full of flames",
+                "Cause glory await",
+                "Our love is spark",
+                "We'll glow in the dark",
+                "It's lightning"
+            ];
+            const interAudio = document.getElementById('inter-01');
+            if (interAudio) {
+                interAudio.muted = isMuted;
+                interAudio.currentTime = 0;
+                interAudio.play().catch(() => { });
+            }
+            for (const line of lyrics) {
+                const textLine = document.createElement('div');
+                textLine.style.color = '#ff3333';
+                terminalOutput.appendChild(textLine);
+                let i = 0;
+                await new Promise(res => {
+                    function typeChar() {
+                        if (i < line.length) {
+                            textLine.textContent += line.charAt(i);
+                            i++;
+                            scrollTerminal();
+                            setTimeout(typeChar, 10);
+                        } else {
+                            res();
+                        }
+                    }
+                    typeChar();
+                });
+                await delay(300);
+            }
+            await delay(7000);
+            if (interAudio) {
+                interAudio.pause();
+                interAudio.currentTime = 0;
+            }
+            shutdownEngine();
+            return;
+        }
+
+        // Easter egg: tech-jcorp
+        if (lower === 'tech-jcorp') {
+            await typeLineTerminal("TECH-JCORP: Building the future, today.", 20);
+            await delay(500);
+            printToTerminal("Use override code 'JCORP40' for a 40% discount on future projects. Contact administrator.");
             return;
         }
 
@@ -427,9 +546,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lower === 'lawithanx') {
             await typeLineTerminal("[SYSTEM] ACCESS GRANTED — CLASSIFIED FILE DETECTED...", 15);
             await delay(500);
-            printToTerminal("Loading FBI CASE FILE - LEAKED...");
+            printToTerminal("Loading CIA CASE FILE - LEAKED...");
             engineState = 'story';
-            await loadStory({ id: 'story_lawithanx', title: 'FBI CASE FILE - LEAKED', selection: '1' });
+            await loadStory({ id: 'story_lawithanx', title: 'CIA CASE FILE - LEAKED', selection: '1' });
             return;
         }
 
@@ -501,6 +620,15 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else if (comp.name === 'binary-translator') {
             renderBinaryTranslator(comp.props, container);
+        } else if (comp.name === 'game-proposal') {
+            container.innerHTML = `
+                <div class="game-proposal-box" style="margin-top:40px; border: 2px dashed #39FF14; padding: 20px; background: rgba(57, 255, 20, 0.05);">
+                    <h3 style="margin-top:0; border-bottom: 2px dashed #0a0a0a; display:inline-block; padding-bottom:5px;">>> [PROTOTYPE CONCEPT]</h3>
+                    <h4 style="color:#e0d8c8; font-size:1.1rem; margin:10px 0;">${comp.props.title}</h4>
+                    <p style="font-family: var(--font-body);">${comp.props.description}</p>
+                    <button style="margin-top:15px; background: transparent; color: #39FF14; border: 1px solid #39FF14; padding: 5px 15px; font-family:var(--font-header); cursor:pointer;">[ MODULE OFFLINE - AWAITING DEPLOYMENT ]</button>
+                </div>
+            `;
         }
     }
 
@@ -729,7 +857,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function shutdownEngine() {
-        if (isTransitioning) return;
+        if (isShuttingDown) return;
+        isShuttingDown = true;
         isTransitioning = true;
 
         // Hide terminal and story viewport immediately
@@ -769,9 +898,8 @@ document.addEventListener('DOMContentLoaded', () => {
             shutdownVideo.muted = true; // Video itself is always muted
             shutdownVideo.style.display = 'block';
 
-            // Sync sync video (4.92s) and audio (4.67s)
-            // Skip first 0.25s of video so they end at the same time
-            shutdownVideo.currentTime = 0.25;
+            // Video and audio are synced natively now (~1.5s)
+            shutdownVideo.currentTime = 0;
 
             try {
                 await shutdownVideo.play();
@@ -810,7 +938,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isOn = false;
             tvButton.classList.remove('active');
         }
-
+        isShuttingDown = false;
         isTransitioning = false;
     }
 
@@ -875,6 +1003,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (manualBtn && manualOverlay) {
         manualBtn.addEventListener('click', () => {
             manualOverlay.classList.toggle('hidden');
+            if (!manualOverlay.classList.contains('hidden')) {
+                updateManualPage(1);
+            }
         });
     }
     if (closeManual && manualOverlay) {
@@ -883,11 +1014,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    let currentManualPage = 1;
+    const totalManualPages = 3;
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const pageIndicator = document.getElementById('page-indicator');
+
+    function updateManualPage(page) {
+        currentManualPage = page;
+        document.querySelectorAll('.manual-page').forEach((p, idx) => {
+            if (idx + 1 === page) p.classList.remove('hidden');
+            else p.classList.add('hidden');
+        });
+
+        if (pageIndicator) pageIndicator.textContent = `PAGE ${page} / ${totalManualPages}`;
+        if (prevPageBtn) prevPageBtn.disabled = (page === 1);
+        if (nextPageBtn) nextPageBtn.disabled = (page === totalManualPages);
+    }
+
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            if (currentManualPage > 1) updateManualPage(currentManualPage - 1);
+        });
+    }
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            if (currentManualPage < totalManualPages) updateManualPage(currentManualPage + 1);
+        });
+    }
+
     // Vintage Radio Toggle & Interference Logic
     const vintageRadio = document.getElementById('vintage-radio');
     const radioAudio = document.getElementById('radio-audio');
     const inter01 = document.getElementById('inter-01');
     const inter02 = document.getElementById('inter-02');
+    const inter03 = document.getElementById('inter-03');
 
     let radioInterferenceInterval = null;
     let radioInterferenceDuration = null;
@@ -905,6 +1066,7 @@ document.addEventListener('DOMContentLoaded', () => {
         radioAudio.volume = radioVolume;
         if (inter01) inter01.volume = radioVolume;
         if (inter02) inter02.volume = radioVolume;
+        if (inter03) inter03.volume = radioVolume;
 
         function updateVolume() {
             if (!isInterfering) {
@@ -917,6 +1079,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (inter01) inter01.volume = radioVolume;
             if (inter02) inter02.volume = radioVolume;
+            if (inter03) inter03.volume = radioVolume;
         }
 
         if (volDownBtn) {
@@ -945,6 +1108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (inter01) { inter01.pause(); inter01.currentTime = 0; inter01.volume = radioVolume; }
             if (inter02) { inter02.pause(); inter02.currentTime = 0; inter02.volume = radioVolume; }
+            if (inter03) { inter03.pause(); inter03.currentTime = 0; inter03.volume = radioVolume; }
             isInterfering = false;
             currentInterferenceAudio = null;
             radioAudio.volume = radioVolume;
@@ -962,8 +1126,9 @@ document.addEventListener('DOMContentLoaded', () => {
             isInterfering = true;
             radioAudio.volume = Math.max(0.0, radioVolume * 0.1); // Turn down main song proportionally
 
-            // Randomly choose track 1 or 2
-            const trackToPlay = Math.random() > 0.5 ? inter01 : inter02;
+            // Randomly choose track 1, 2 or 3
+            const rand = Math.random();
+            const trackToPlay = rand < 0.33 ? inter01 : (rand < 0.66 ? inter02 : inter03);
             currentInterferenceAudio = trackToPlay;
 
             if (currentInterferenceAudio) {
@@ -1018,12 +1183,41 @@ document.addEventListener('DOMContentLoaded', () => {
             }, duration);
         }
 
-        const radioTracks = ['assets/radio song.mp3', 'assets/radiosong02.mp3', 'assets/radiosong03.mp3'];
-        let currentTrackIndex = 0;
+        const radioTracks = [
+            'assets/snd_radio_01.mp3',
+            'assets/snd_radio_02.mp3',
+            'assets/snd_radio_03.mp3',
+            'assets/snd_radio_04.mp3'
+        ];
+
+        let shuffledPlaylist = [];
+        let playlistIndex = 0;
+
+        function shuffleArray(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function initPlaylist() {
+            shuffledPlaylist = shuffleArray(radioTracks);
+            playlistIndex = 0;
+            radioAudio.src = shuffledPlaylist[playlistIndex];
+        }
+
+        initPlaylist();
 
         radioAudio.addEventListener('ended', () => {
-            currentTrackIndex = (currentTrackIndex + 1) % radioTracks.length;
-            radioAudio.src = radioTracks[currentTrackIndex];
+            playlistIndex++;
+            if (playlistIndex >= shuffledPlaylist.length) {
+                // All songs played, reshuffle
+                shuffledPlaylist = shuffleArray(radioTracks);
+                playlistIndex = 0;
+            }
+            radioAudio.src = shuffledPlaylist[playlistIndex];
             radioAudio.play().catch(e => console.error("Radio play next track failed:", e));
         });
 

@@ -12,11 +12,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/storygear.png">
+    <link rel="icon" type="image/png" href="assets/img_logo_gear.png">
     <link rel="stylesheet" href="scripts/style.css">
 </head>
 
 <body>
+
+    <!-- Foliage entry overlay (Session-based) -->
+    <div id="foilage-overlay" class="foilage-overlay hidden">
+        <img src="assets/foilage.png" alt="Overgrown Foliage" class="foilage-img">
+        <div class="foilage-hint">CLICK TO EXCAVATE</div>
+    </div>
 
     <!-- Vintage radio attachment persistent across all views -->
     <div id="vintage-radio" class="vintage-radio-attachment" title="Toggle Radio">
@@ -31,19 +37,24 @@
     </div>
 
     <div class="engine-frame">
+        <div class="mainframe-branding">
+            <div class="branding-label">
+                <img src="assets/img_logo_gear.png" alt="Story Gear Logo" class="mainframe-logo">
+                <span class="mainframe-title">STORYENGINE</span>
+            </div>
+        </div>
 
         <!-- TV screen area — video plays inside here -->
         <div id="tv-screen" class="tv-screen">
             <video id="boot-video" playsinline preload="auto">
-                <source src="assets/colourcheck.mp4" type="video/mp4">
+                <source src="assets/vid_boot.mp4" type="video/mp4">
             </video>
             <video id="shutdown-video" playsinline preload="auto">
-                <source src="assets/tv-off.mp4" type="video/mp4">
+                <source src="assets/vid_shutdown.mp4" type="video/mp4">
             </video>
         </div>
         <!-- Terminal interface — replaces tv-screen inside the same frame -->
         <header id="main-interface" class="hidden" role="main">
-            <h1 id="main-title">STORYENGINE</h1>
             <div id="terminal-interface">
                 <div id="terminal-output"></div>
                 <div class="input-line">
@@ -94,56 +105,109 @@
     <!-- Manual popup — appears on screen like a map -->
     <div id="manual-overlay" class="manual-overlay hidden">
         <div class="manual-content">
-            <h2>OPERATOR'S MANUAL – STORY ENGINE v1.3</h2>
-            <p class="manual-date">Revised November 4, 1952.</p>
-            <p>Welcome to the <strong>STORY ENGINE</strong>, the newest marvel of narrative computational synthesis
-                forged exclusively by Tech-JCorp. Engineered for the modern age, this apparatus delivers high-fidelity
-                textual transmission directly to your viewing screen.</p>
-            <hr>
-            <h3>TERMINAL OPERATION DIRECTRY:</h3>
-            <ul>
-                <li><code>list</code> — Display the master catalog of available chronicles.</li>
-                <li><code>[Number]</code> — Input the corresponding numeric code to commence transmission.</li>
-                <li><code>back</code> — Halt current stream and return to the main directory.</li>
-                <li><code>clear</code> — Wipe the cathode-ray tube of preceding outputs.</li>
-                <li><code>exit</code> — Terminate connection and prepare for hardware shutdown.</li>
-            </ul>
-            <hr>
-            <h3>MAINTENANCE & SAFETY:</h3>
-            <ul>
-                <li>Allow appropriate warm-up time before initial query bridging.</li>
-                <li>Unknown dialect inputs will result in a localized sonic echo. Enter commands precisely.</li>
-                <li>Sudden power termination will not damage the core module but is ill-advised during active playback.
-                </li>
-            </ul>
-            <p class="manual-footer">Tech-JCorp thanks you for your purchase. Building the future, today.</p>
-            <button id="close-manual" class="manual-close-btn">Put away Manuel</button>
+
+            <div id="manual-page-1" class="manual-page">
+                <h2>OPERATOR'S MANUAL – STORY ENGINE v1.3</h2>
+                <p class="manual-date">Revised 4 November 1952<br>Serial No.: SE-1347-A<br>Classification: TOP SECRET –
+                    TECH-JCORP INTERNAL USE</p>
+                <p>The <strong>STORY ENGINE</strong> is a narrative computation device, manufactured by Tech-JCorp.
+                    Designed for operational deployment, it delivers textual transmissions to the viewing screen.</p>
+                <hr>
+                <h3>TERMINAL OPERATION DIRECTORY:</h3>
+                <ul>
+                    <li><code>list</code> — Displays complete catalog of chronicles.</li>
+                    <li><code>[Number]</code> — Enter code to initiate transmission.</li>
+                    <li><code>back</code> — Cease current transmission; return to directory.</li>
+                    <li><code>clear</code> — Erase all content from cathode-ray display.</li>
+                    <li><code>exit</code> — Disconnect and prepare unit for shutdown.</li>
+                </ul>
+                <hr>
+                <h3>MAINTENANCE AND SAFETY:</h3>
+                <ul>
+                    <li>Allow unit to reach operating temperature before first query.</li>
+                    <li>Unknown dialect inputs may produce audible echo. Issue commands exactly as specified.</li>
+                </ul>
+            </div>
+
+            <div id="manual-page-2" class="manual-page hidden">
+                <h2>ENGINE ARCHITECTURE & FIELD SPECIFICATIONS</h2>
+                <p class="manual-date">Classification: RESTRICTED – TECH-JCORP INTERNAL</p>
+                <p>The <strong>STORY ENGINE</strong> represents a revolutionary leap in declassified military data
+                    retrieval. Utilizing a zero-dependency logic kernel, the system reconstructs historical data
+                    clusters with 99.8% accuracy.</p>
+                <hr>
+                <h3>TECHNICAL INFRASTRUCTURE:</h3>
+                <ul>
+                    <li><strong>CORE ENGINE:</strong> Vanilla JavaScript (ES6+) logic kernel.</li>
+                    <li><strong>VISUALS:</strong> CSS3 CRT simulation with hardware-accelerated scanlines.</li>
+                    <li><strong>DATA:</strong> Asynchronous JSON narrative injection (Fetch API v2.0).</li>
+                    <li><strong>AESTHETICS:</strong> Bento-box framing with authentic 1950s documentary fidelity.</li>
+                </ul>
+                <hr>
+                <p><em>Note:</em> The engine utilizes advanced memory caching to prevent white-screen flashes during
+                    asset reconstruction.</p>
+            </div>
+
+            <div id="manual-page-3" class="manual-page hidden">
+                <h2>JAGUAR MODULE & ANOMALOUS PHENOMENA</h2>
+                <p class="manual-date">CLASSIFIED: JAGUAR CLEARANCE ONLY</p>
+                <p>The **Jaguar module** is energized via the **Temple Gem** interface. Activation may induce anomalous
+                    computational phenomena; these events are irregular and may present as unpredictable textual or
+                    visual outputs.</p>
+                <hr>
+                <div
+                    style="text-align: center; padding: 15px; border: 2px dashed #000; background: rgba(0,0,0,0.05); margin: 10px 0;">
+                    <p style="margin: 0;"><strong>ANOMALY ALERT:</strong> randomized outputs are not indicative of
+                        system malfunction. Operators must document all anomalies and report to
+                        <strong>tech-jcorp.org</strong> for oversight.
+                    </p>
+                </div>
+                <hr>
+                <p>The jaguar is energized with a temple gem that creates strange paranormal anomalies. The future is
+                    written in the stone of the past. Keep digging, operator.</p>
+            </div>
+
+            <div class="manual-footer-controls">
+                <div class="manual-pagination">
+                    <button id="prev-page" class="manual-nav-btn">&larr; PREV</button>
+                    <span id="page-indicator">PAGE 1 / 3</span>
+                    <button id="next-page" class="manual-nav-btn">NEXT &rarr;</button>
+                </div>
+                <button id="close-manual" class="manual-close-btn" style="margin-left: auto;">Put away Manuel</button>
+            </div>
         </div>
     </div>
 
     <!-- Hidden audio element for the vintage radio -->
     <audio id="radio-audio" preload="auto">
-        <source src="assets/radio song.mp3" type="audio/mpeg">
+        <source src="assets/snd_radio_01.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Hidden audio elements for TV boot and shutdown -->
     <audio id="on-audio" preload="auto">
-        <source src="assets/ontv.mp3" type="audio/mpeg">
+        <source src="assets/sfx_power_on.mp3" type="audio/mpeg">
     </audio>
     <audio id="logo-audio" preload="auto">
-        <source src="assets/The Drums That Stir the Spirit - Ancient Energy Reborn.mp3" type="audio/mpeg">
+        <source src="assets/sfx_logo_flash.mp3" type="audio/mpeg">
     </audio>
 
     <audio id="off-audio" preload="auto">
-        <source src="assets/offtv.mp3" type="audio/mpeg">
+        <source src="assets/sfx_power_off.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Radio Interference tracks -->
     <audio id="inter-01" preload="auto">
-        <source src="assets/interference-01.mp3" type="audio/mpeg">
+        <source src="assets/sfx_inter_01.mp3" type="audio/mpeg">
     </audio>
     <audio id="inter-02" preload="auto">
-        <source src="assets/interference-02.mp3" type="audio/mpeg">
+        <source src="assets/sfx_inter_02.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="inter-03" preload="auto">
+        <source src="assets/sfx_inter_03.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="rustling-audio" preload="auto">
+        <source src="assets/rustling" type="audio/mpeg">
     </audio>
 
 </body>
