@@ -40,7 +40,7 @@ The unit's interface blends tactical military hardware with early experimental c
 - [ ] 📈 Project Status
 🚧 underconstruction: currently under development.
 
-"Call the jaguar and Building the future, Today."
+"Call the jaguar to build the future, Today."
 *Tech-JCorp *
 Proprietary - All Rights Reserved. Contact Tech-JCorp for licensing.
 
