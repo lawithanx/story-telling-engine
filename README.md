@@ -36,4 +36,11 @@ The unit's interface blends tactical military hardware with early experimental c
 - [x] Security protocols and `robots.txt` hardening enacted.
 - [x] Overgrown foliage concealment protocol implemented.
 
-*Tech-JCorp thanks you for your cooperation. Building the future, today.*
+
+- [ ] 📈 Project Status
+🚧 underconstruction: currently under development.
+
+"Call the jaguar and Building the future, Today."
+*Tech-JCorp *
+Proprietary - All Rights Reserved. Contact Tech-JCorp for licensing.
+
